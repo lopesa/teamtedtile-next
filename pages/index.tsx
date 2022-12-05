@@ -1,8 +1,47 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
 
-export default function Home() {
+interface GalleryImagesResponse {
+  data: GalleryImage[];
+  meta: {
+    pagination: {
+      page: number;
+      pageCount: number;
+      pageSize: number;
+      total: number;
+    };
+  };
+}
+interface GalleryImage {
+  id: number;
+  attributes: {
+    Title: string;
+    createdAt: string;
+    description: string;
+    image: {
+      data: {
+        id: number;
+        attributes: {
+          name: string;
+          url: string;
+          width: number;
+          height: number;
+        };
+      };
+    };
+  };
+}
+
+const IMAGE_URL_BASE = "https://api.teamtedtile.com";
+
+export default function Home({
+  images,
+  notFound,
+}: {
+  images: GalleryImage[];
+  notFound: boolean;
+}) {
   return (
     <div className={styles.container}>
       <Head>
@@ -12,60 +51,44 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        {notFound && <h1>Images Not Found</h1>}
+        {!notFound && (
+          <ul>
+            <li>
+              {images &&
+                images.map((image: GalleryImage, index: number) => (
+                  <Image
+                    src={`${IMAGE_URL_BASE}${image.attributes.image.data.attributes.url}`}
+                    key={index}
+                    alt=""
+                    width={image.attributes.image.data.attributes.width}
+                    height={image.attributes.image.data.attributes.height}
+                  />
+                ))}
+            </li>
+          </ul>
+        )}
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
-  )
+  );
+}
+
+export async function getStaticProps(): Promise<
+  | {
+      props: { images: GalleryImage[]; notFound: boolean };
+    }
+  | Error
+> {
+  // https://developer.mozilla.org/en-US/docs/Web/API/fetch
+  const res = await fetch(
+    "https://api.teamtedtile.com/api/gallery-images?populate=*"
+  ).catch((e) => {
+    console.error(e);
+  });
+  if (res && res.ok) {
+    const json: GalleryImagesResponse = await res.json();
+    return { props: { images: json.data, notFound: false } };
+  } else {
+    return { props: { images: [], notFound: true } };
+  }
 }
