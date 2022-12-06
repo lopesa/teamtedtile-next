@@ -1,0 +1,334 @@
+@import "../styles/mixins.scss";
+@import "../styles/variables.scss";
+
+.homeSplashContainer {
+  //   @include flexy(column);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  @include proxima-nova;
+
+  width: 100%;
+  height: 100vh;
+
+  .topRow,
+  .bottomRow {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .one {
+      width: 100%;
+      height: 100%;
+      position: relative;
+
+      // @media screen and (min-width: 767px (min-height 450px)) {
+      @media screen and (min-width: $ipadwidth-desktop) {
+        width: 65%;
+      }
+    }
+
+    .two {
+      width: 35%;
+      height: 100%;
+      position: relative;
+    }
+  }
+
+  .topRow {
+    height: 45%;
+
+    .one {
+      background-color: $light-warm-grey;
+      color: $warm-grey;
+      text-align: left;
+      line-height: 3.5em;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+
+      padding: 0px 0px 15px 20px;
+
+      @media (min-width: $ipadwidth-desktop) {
+        padding: 0;
+        align-items: flex-end;
+        padding: 0px 0px 0px 0px;
+        text-align: right;
+      }
+
+      h1 {
+        @include proxima-nova-bold;
+        font-size: 4em;
+        margin: 0;
+        letter-spacing: -0.02em;
+
+        @media (min-width: $big-phone) {
+          font-size: 4.8em;
+          letter-spacing: -0.02em;
+        }
+
+        @media (min-width: $phone-ipad) {
+          font-size: 7em;
+          letter-spacing: -0.02em;
+        }
+
+        @media (min-width: $ipadwidth-desktop) {
+          font-size: 5.9em;
+          margin: 90px 60px 0 0;
+          letter-spacing: -0.02em;
+        }
+
+        @media (min-width: $ipad-wide) {
+          font-size: 7.5em;
+          margin: 90px 85px 0 0;
+          letter-spacing: -0.02em;
+        }
+      }
+
+      h4 {
+        @include proxima-nova-light;
+        font-size: 1.5em;
+        margin: 0;
+        letter-spacing: 0.05em;
+        line-height: 0.9em;
+
+        @media (min-width: $big-phone) {
+          font-size: 1.9em;
+        }
+
+        @media (min-width: $ipadwidth-desktop) {
+          font-size: 2.18em;
+          margin: 0px 70px 75px 0;
+          letter-spacing: 0.102em;
+        }
+
+        @media (min-width: $ipad-wide) {
+          font-size: 2.7em;
+          margin: 0px 98px 67px 0;
+          letter-spacing: 0.1em;
+        }
+      }
+
+      p {
+        line-height: 1em;
+        margin: 10px 0 0 10px;
+        font-size: 1.3em;
+        @include proxima-nova-light-italic;
+
+        @media (min-width: $big-phone) {
+          margin: 20px 0 0 18px;
+          font-size: 1.4em;
+        }
+
+        @media (min-width: $ipadwidth-desktop) {
+          display: none;
+        }
+      }
+
+      .container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 7px 0 10px;
+
+        width: 100%;
+
+        @media (min-width: $horizontal-breaker) {
+          padding: 21px 0 30px;
+        }
+
+        @media (min-width: $phone-ipad) {
+          width: initial;
+        }
+
+        @media (min-width: $ipadwidth-desktop) {
+          padding-top: 15px;
+          padding-bottom: 0px;
+          justify-content: flex-end;
+        }
+
+        @media (min-width: $ipad-wide) {
+          padding-top: 23px;
+        }
+      }
+
+      .downArrow {
+        width: 23px;
+        height: 23px;
+        margin: 2px 12px 0 12px;
+        background-image: url(/images/homesplash-tiles-downarrow.svg);
+        background-size: contain;
+
+        @media (min-width: $ipadwidth-desktop) {
+          width: 25px;
+          height: 25px;
+          margin: 2px 14px 0 0;
+          display: block;
+        }
+
+        @media (min-width: $ipad-wide) {
+          width: 37px;
+          height: 37px;
+          margin: 2px 24px 0 0;
+        }
+
+        &:hover {
+          filter: hue-rotate(200deg) brightness(120%) opacity(75%);
+          -webkit-filter: hue-rotate(200deg) brightness(120%) opacity(75%);
+
+          cursor: pointer;
+        }
+      }
+    }
+
+    .two {
+      background-image: url(/images/homesplash-shower-closeup.jpg);
+      background-size: cover;
+      background-position: 50% 50%;
+      position: relative;
+
+      display: none;
+
+      @media (min-width: $ipadwidth-desktop) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .overlay {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        background-color: $dark-cold-grey-15;
+      }
+
+      .text {
+        p {
+          margin: 0;
+        }
+        position: absolute;
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-start;
+
+        @include proxima-nova-bold;
+        font-size: 2.65em;
+        color: $white;
+        padding: 0 0 96px 0px;
+        line-height: 0.95em;
+
+        @media (min-width: $ipadwidth-desktop) {
+          font-size: 2.15em;
+          padding: 0 0 106px 22px;
+        }
+
+        @media (min-width: $ipad-wide) {
+          font-size: 2.75em;
+          padding: 0 0 104px 40px;
+        }
+      }
+    }
+  }
+
+  .bottomRow {
+    height: 27.5%;
+
+    @media (min-width: $ipadwidth-desktop) {
+      height: 55%;
+    }
+
+    .one {
+      background-image: url(/images/homesplash-kitchen.jpg);
+      background-size: cover;
+      background-position: 50% 50%;
+
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+    }
+
+    .two {
+      background-image: url(/images/homesplash-shower.jpg);
+      background-size: cover;
+      background-position: 0 50%;
+
+      position: relative;
+      display: none;
+
+      @media (min-width: $ipadwidth-desktop) {
+        display: block;
+      }
+
+      .overlay {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        background-color: $light-warm-grey-25;
+      }
+
+      .text {
+        position: absolute;
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+
+        @include proxima-nova;
+        font-size: 2em;
+        line-height: 1.1em;
+        color: $green;
+        padding: 20px 0 0 20px;
+      }
+    }
+  }
+
+  .phoneBottomRow {
+    width: 100%;
+    height: 27.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .one,
+    .two {
+      width: 50%;
+      height: 100%;
+    }
+
+    .one {
+      background-image: url(/images/homesplash-shower.jpg);
+      background-size: cover;
+      background-position: 0 50%;
+
+      .copyright {
+        right: 52%;
+      }
+    }
+
+    .two {
+      background-image: url(/images/homesplash-shower-closeup.jpg);
+      background-size: cover;
+      background-position: 50% 50%;
+    }
+
+    @media (min-width: $ipadwidth-desktop) {
+      display: none;
+    }
+  }
+}
