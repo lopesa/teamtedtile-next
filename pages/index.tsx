@@ -1,3 +1,4 @@
+import { GetStaticProps } from "next";
 import Head from "next/head";
 import HomeSplash from "../components/homeSplash";
 import ScrollGallery from "../components/scrollGallery";
@@ -33,12 +34,9 @@ export default function Home({
   );
 }
 
-export async function getStaticProps(): Promise<
-  | {
-      props: { images: GalleryImage[]; notFound: boolean };
-    }
-  | Error
-> {
+export const getStaticProps: GetStaticProps = async (): Promise<{
+  props: { images: GalleryImage[]; notFound: boolean };
+}> => {
   // https://developer.mozilla.org/en-US/docs/Web/API/fetch
   const res = await fetch(
     `${getApiUrlBase()}/api/gallery-images?populate=*`
@@ -49,4 +47,4 @@ export async function getStaticProps(): Promise<
   } else {
     return { props: { images: [], notFound: true } };
   }
-}
+};
