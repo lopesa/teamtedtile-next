@@ -17,10 +17,10 @@
     "next": "13.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "sanitize.css": "^13.0.0",
     "typescript": "4.9.3"
   },
   "devDependencies": {
-    "sanitize.css": "^13.0.0",
     "sass": "^1.56.1"
   }
 }

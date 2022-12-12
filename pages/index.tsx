@@ -33,7 +33,10 @@ interface GalleryImage {
   };
 }
 
-const IMAGE_URL_BASE = "https://api.teamtedtile.com";
+const API_URL_BASE =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:1337"
+    : "https://api.teamtedtile.com";
 
 export default function Home({
   images,
@@ -52,16 +55,14 @@ export default function Home({
 
       <main>
         <HomeSplash />
-      </main>
-      {/* <main className={styles.main}>
         {notFound && <h1>Images Not Found</h1>}
         {!notFound && (
           <ul>
             <li>
-              {images &&
+              {images.length &&
                 images.map((image: GalleryImage, index: number) => (
                   <Image
-                    src={`${IMAGE_URL_BASE}${image.attributes.image.data.attributes.url}`}
+                    src={`${API_URL_BASE}${image.attributes.image.data.attributes.url}`}
                     key={index}
                     alt=""
                     width={image.attributes.image.data.attributes.width}
@@ -71,27 +72,25 @@ export default function Home({
             </li>
           </ul>
         )}
-      </main> */}
+      </main>
     </>
   );
 }
 
-// export async function getStaticProps(): Promise<
-//   | {
-//       props: { images: GalleryImage[]; notFound: boolean };
-//     }
-//   | Error
-// > {
-//   // https://developer.mozilla.org/en-US/docs/Web/API/fetch
-//   const res = await fetch(
-//     "https://api.teamtedtile.com/api/gallery-images?populate=*"
-//   ).catch((e) => {
-//     console.error(e);
-//   });
-//   if (res && res.ok) {
-//     const json: GalleryImagesResponse = await res.json();
-//     return { props: { images: json.data, notFound: false } };
-//   } else {
-//     return { props: { images: [], notFound: true } };
-//   }
-// }
+export async function getStaticProps(): Promise<
+  | {
+      props: { images: GalleryImage[]; notFound: boolean };
+    }
+  | Error
+> {
+  // https://developer.mozilla.org/en-US/docs/Web/API/fetch
+  const res = await fetch(
+    `${API_URL_BASE}/api/gallery-images?populate=*`
+  ).catch((e) => {});
+  if (res && res.ok) {
+    const json: GalleryImagesResponse = await res.json();
+    return { props: { images: json.data, notFound: false } };
+  } else {
+    return { props: { images: [], notFound: true } };
+  }
+}

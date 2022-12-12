@@ -9,6 +9,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "api.teamtedtile.com",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
     ],
   },
   sassOptions: {
