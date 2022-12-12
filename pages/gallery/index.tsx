@@ -1,16 +1,16 @@
 import Head from "next/head";
-import HomeSplash from "../components/homeSplash";
-import ScrollGallery from "../components/scrollGallery";
-import { GalleryImagesResponse, GalleryImage } from "../interfaces/gallery";
-import { getApiUrlBase } from "../utils";
+import HomeSplash from "../../components/homeSplash";
+import ScrollGallery from "../../components/scrollGallery";
+import { GalleryImagesResponse, GalleryImage } from "../../interfaces/gallery";
+import { getApiUrlBase } from "../../utils";
 
 /**
- * this page and the gallery are duped code mostly but I am seeing that
+ * this page and the index are duped code mostly but I am seeing that
  * it's not wise to refactor out the getStaticProps call to a common place
  * think about just factoring out the core of it later
  */
 
-export default function Home({
+export default function HomeGallery({
   images,
   notFound,
 }: {
