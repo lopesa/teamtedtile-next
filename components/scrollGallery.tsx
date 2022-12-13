@@ -1,18 +1,13 @@
 import Image from "next/image";
-import { GalleryImage } from "../interfaces/gallery";
+import { IGalleryItem } from "../interfaces/gallery";
 import Link from "next/link";
-import { getGalleryUrlStringFromTitle } from "../utils";
-
-const API_URL_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:1337"
-    : "https://api.teamtedtile.com";
+import { getGalleryUrlStringFromTitle, getApiUrlBase } from "../utils";
 
 export default function ScrollGallery({
   images,
   notFound,
 }: {
-  images: GalleryImage[];
+  images: IGalleryItem[];
   notFound: boolean;
 }) {
   return (
@@ -22,7 +17,7 @@ export default function ScrollGallery({
         <ul>
           <li>
             {images.length &&
-              images.map((image: GalleryImage, index: number) => (
+              images.map((image: IGalleryItem, index: number) => (
                 <Link
                   href={`gallery/${getGalleryUrlStringFromTitle(
                     image.attributes.title
@@ -30,7 +25,9 @@ export default function ScrollGallery({
                   key={index}
                 >
                   <Image
-                    src={`${API_URL_BASE}${image.attributes.image.data.attributes.url}`}
+                    src={`${getApiUrlBase()}${
+                      image.attributes.image.data.attributes.url
+                    }`}
                     alt=""
                     width={image.attributes.image.data.attributes.width}
                     height={image.attributes.image.data.attributes.height}

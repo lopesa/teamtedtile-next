@@ -1,5 +1,5 @@
-export interface GalleryImagesResponse {
-  data: GalleryImage[];
+export interface IGalleryItemsResponse {
+  data: IGalleryItem[];
   meta: {
     pagination: {
       page: number;
@@ -9,7 +9,7 @@ export interface GalleryImagesResponse {
     };
   };
 }
-export interface GalleryImage {
+export interface IGalleryItem {
   id: number;
   attributes: {
     title: string;

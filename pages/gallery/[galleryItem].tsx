@@ -1,21 +1,32 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { GalleryImage, GalleryImagesResponse } from "../../interfaces/gallery";
-import { getApiUrlBase, getGalleryUrlStringFromTitle } from "../../utils";
+import { IGalleryItem, IGalleryItemsResponse } from "../../interfaces/gallery";
+import {
+  getApiUrlBase,
+  getGalleryUrlStringFromTitle,
+  getGalleryTitleFromUrlString,
+} from "../../utils";
 import { GetStaticPaths, GetStaticProps } from "next";
+import Image from "next/image";
 
 interface props {
-  image?: GalleryImage;
+  galleryItem: IGalleryItem["attributes"] | null;
 }
 
-export default function GalleryItem({ image }: props) {
+export default function GalleryItem({ galleryItem }: props) {
   const router = useRouter();
-  //   const galleryItem = router.query.galleryItem as string;
 
   return (
     <>
-      {/* <h1>gallery item: {galleryItem}</h1> */}
-      <h1>gallery item: {image?.attributes.title}</h1>
+      <h1>gallery item: {galleryItem?.title}</h1>
+      {galleryItem && (
+        <Image
+          src={`${getApiUrlBase()}${galleryItem.image.data.attributes.url}`}
+          alt=""
+          width={galleryItem.image.data.attributes.width}
+          height={galleryItem.image.data.attributes.height}
+        />
+      )}
     </>
   );
 }
@@ -23,10 +34,8 @@ export default function GalleryItem({ image }: props) {
 export const getStaticProps: GetStaticProps = async (
   context
 ): Promise<{
-  props: { image?: GalleryImage };
+  props: { galleryItem: IGalleryItem["attributes"] | null };
 }> => {
-  debugger;
-
   // want the url to be the title but the api call wants to be made with the id
   // Next won't allow more than the url param
   // can make the api call with the title, it is unique can do this with strapi filtering
@@ -37,15 +46,15 @@ export const getStaticProps: GetStaticProps = async (
   // https://github.com/vercel/examples/tree/main/solutions/reuse-responses
   // https://github.com/vercel/next.js/discussions/11272#discussioncomment-2257876
   const res = await fetch(
-    `${getApiUrlBase()}/api/gallery-images/${context.params?.galleryItem}` // fails
-    // `${getApiUrlBase()}/api/gallery-images/${context.params?.id}`
-    // `${getApiUrlBase()}/api/gallery-images/1`
+    `${getApiUrlBase()}/api/gallery-images?filters[title][$eq]=${getGalleryTitleFromUrlString(
+      context.params?.galleryItem
+    )}`
   ).catch((e) => {});
   if (res && res.ok) {
     const json = await res.json();
-    return { props: { image: json.data } };
+    return { props: { galleryItem: json.data[0].attributes } };
   } else {
-    return { props: { image: undefined } };
+    return { props: { galleryItem: null } };
   }
 };
 
@@ -62,18 +71,16 @@ export const getStaticPaths: GetStaticPaths = async () => {
     };
   }
 
-  // Call an external API endpoint to get posts
-  // const res = await fetch('https://.../posts')
-  // const posts = await res.json()
-  let galleryItems: GalleryImagesResponse | undefined;
-  const res = await fetch(
-    `${getApiUrlBase()}/api/gallery-images?populate=*`
-  ).catch((e) => {});
+  // Call an external API endpoint to get posts (galleryItems)
+  let galleryItems: IGalleryItemsResponse | undefined;
+  const res = await fetch(`${getApiUrlBase()}/api/gallery-images`).catch(
+    (e) => {}
+  );
   if (res && res.ok) {
     galleryItems = await res.json();
   }
 
-  // Get the paths we want to prerender based on posts
+  // Get the paths we want to prerender based on posts (galleryItems)
   // In production environments, prerender all pages
   // (slower builds, but faster initial page load)
   // { fallback: false } means other routes should 404

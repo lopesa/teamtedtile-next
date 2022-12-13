@@ -2,7 +2,7 @@ import { GetStaticProps } from "next";
 import Head from "next/head";
 import HomeSplash from "../../components/homeSplash";
 import ScrollGallery from "../../components/scrollGallery";
-import { GalleryImagesResponse, GalleryImage } from "../../interfaces/gallery";
+import { IGalleryItemsResponse, IGalleryItem } from "../../interfaces/gallery";
 import { getApiUrlBase } from "../../utils";
 
 /**
@@ -15,7 +15,7 @@ export default function HomeGallery({
   images,
   notFound,
 }: {
-  images: GalleryImage[];
+  images: IGalleryItem[];
   notFound: boolean;
 }) {
   return (
@@ -35,14 +35,14 @@ export default function HomeGallery({
 }
 
 export const getStaticProps: GetStaticProps = async (): Promise<{
-  props: { images: GalleryImage[]; notFound: boolean };
+  props: { images: IGalleryItem[]; notFound: boolean };
 }> => {
   // https://developer.mozilla.org/en-US/docs/Web/API/fetch
   const res = await fetch(
     `${getApiUrlBase()}/api/gallery-images?populate=*`
   ).catch((e) => {});
   if (res && res.ok) {
-    const json: GalleryImagesResponse = await res.json();
+    const json: IGalleryItemsResponse = await res.json();
     return { props: { images: json.data, notFound: false } };
   } else {
     return { props: { images: [], notFound: true } };
