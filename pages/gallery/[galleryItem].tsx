@@ -8,6 +8,10 @@ import {
 } from "../../utils";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
+import styles from "../../styles/galleryItem.module.scss";
+import Head from "next/head";
+import HomeSplash from "../../components/homeSplash";
+import ScrollGallery from "../../components/scrollGallery";
 
 interface props {
   galleryItem: IGalleryItem["attributes"] | null;
@@ -18,15 +22,51 @@ export default function GalleryItem({ galleryItem }: props) {
 
   return (
     <>
-      <h1>gallery item: {galleryItem?.title}</h1>
-      {galleryItem && (
-        <Image
-          src={`${getApiUrlBase()}${galleryItem.image.data.attributes.url}`}
-          alt=""
-          width={galleryItem.image.data.attributes.width}
-          height={galleryItem.image.data.attributes.height}
-        />
-      )}
+      <Head>
+        <title>Team Ted Tile -- Home</title>
+        <meta name="description" content="Team Ted Tile -- Home" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main>
+        <div className={styles.overlay}>
+          <div className={styles.innerOverlay}>
+            {/* <h1>gallery item: {galleryItem?.title}</h1> */}
+            {galleryItem && (
+              <Image
+                src={`${getApiUrlBase()}${
+                  galleryItem.image.data.attributes.url
+                }`}
+                alt=""
+                fill={true}
+                style={{ objectFit: "contain" }}
+              />
+            )}
+            <div className={styles.navTemp}>
+              {galleryItem?.previous && (
+                <Link
+                  href={`/gallery/${getGalleryUrlStringFromTitle(
+                    galleryItem.previous
+                  )}`}
+                >
+                  prev
+                </Link>
+              )}
+              {galleryItem?.next && (
+                <Link
+                  href={`/gallery/${getGalleryUrlStringFromTitle(
+                    galleryItem.next
+                  )}`}
+                >
+                  next
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+        <HomeSplash />
+        {/* <ScrollGallery images={images} notFound={notFound} /> */}
+      </main>
     </>
   );
 }

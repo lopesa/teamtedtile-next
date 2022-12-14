@@ -13,8 +13,6 @@ export interface IGalleryItem {
   id: number;
   attributes: {
     title: string;
-    createdAt: string;
-    description: string;
     image: {
       data: {
         id: number;
@@ -26,5 +24,9 @@ export interface IGalleryItem {
         };
       };
     };
+    copyright?: string;
+    tedheadText?: string;
+    previous?: string;
+    next?: string;
   };
 }
