@@ -24,6 +24,10 @@
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
 
+    .imageMotionContainer {
+      height: 100%;
+    }
+
     .close {
       width: 70px;
       height: 36px;

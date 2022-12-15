@@ -11,6 +11,7 @@ import Image from "next/image";
 import styles from "../../styles/galleryItem.module.scss";
 import Head from "next/head";
 import HomeSplash from "../../components/homeSplash";
+import { motion, AnimatePresence } from "framer-motion";
 import ScrollGallery from "../../components/scrollGallery";
 
 interface props {
@@ -49,14 +50,24 @@ export default function GalleryItem({ galleryItem }: props) {
                     </div>
                   </Link>
                 )}
-                <Image
-                  src={`${getApiUrlBase()}${
-                    galleryItem.image.data.attributes.url
-                  }`}
-                  alt=""
-                  fill={true}
-                  style={{ objectFit: "contain" }}
-                />
+                <AnimatePresence>
+                  <motion.div
+                    key={galleryItem.title}
+                    initial={{ translateX: "-1000px" }}
+                    animate={{ translateX: "0" }}
+                    exit={{ translateX: "1000px" }}
+                    className={styles.imageMotionContainer}
+                  >
+                    <Image
+                      src={`${getApiUrlBase()}${
+                        galleryItem.image.data.attributes.url
+                      }`}
+                      alt=""
+                      fill={true}
+                      style={{ objectFit: "contain" }}
+                    />
+                  </motion.div>
+                </AnimatePresence>
 
                 {galleryItem.next && (
                   <Link
