@@ -1,0 +1,52 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+
+.overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  background-color: $warm-grey-60;
+  width: 100%;
+  height: 100vh;
+  z-index: 100;
+
+  .innerOverlay {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 98%;
+    height: 96%;
+    background-color: $light-warm-grey-85;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
+    .close {
+      width: 70px;
+      height: 36px;
+
+      text-align: center;
+      line-height: 36px;
+
+      position: fixed;
+      right: 1%;
+      z-index: 110;
+
+      @include baseTransition;
+
+      @include proxima-nova-light;
+      font-size: 3em;
+      color: $red;
+      text-decoration: none;
+
+      &:hover {
+        cursor: pointer;
+        background-color: $red;
+        color: $white;
+      }
+    }
+  }
+}

@@ -13,13 +13,18 @@ import Head from "next/head";
 import HomeSplash from "../../components/homeSplash";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollGallery from "../../components/scrollGallery";
+import Overlay from "../../components/overlay";
+import { useState } from "react";
 
 interface props {
   galleryItem: IGalleryItem["attributes"] | null;
 }
 
 export default function GalleryItem({ galleryItem }: props) {
-  const router = useRouter();
+  // const router = useRouter();
+  const [slideDirection, setSlideDirection] = useState<
+    "left" | "right" | undefined
+  >(undefined);
 
   return (
     <>
@@ -30,62 +35,71 @@ export default function GalleryItem({ galleryItem }: props) {
       </Head>
 
       <main>
-        <div className={styles.overlay}>
-          <div className={styles.innerOverlay}>
-            <Link href="/" className={styles.close}>
-              &times;
-            </Link>
-            {galleryItem && (
-              <>
-                {galleryItem.previous && (
-                  <Link
-                    href={`/gallery/${getGalleryUrlStringFromTitle(
-                      galleryItem.previous
-                    )}`}
-                  >
-                    <div className={`${styles.arrow} ${styles.left}`}>
-                      <div
-                        className={`${styles.innerArrow} ${styles.left}`}
-                      ></div>
-                    </div>
-                  </Link>
-                )}
-                <AnimatePresence>
-                  <motion.div
-                    key={galleryItem.title}
-                    initial={{ translateX: "-1000px" }}
-                    animate={{ translateX: "0" }}
-                    exit={{ translateX: "1000px" }}
-                    className={styles.imageMotionContainer}
-                  >
-                    <Image
-                      src={`${getApiUrlBase()}${
-                        galleryItem.image.data.attributes.url
-                      }`}
-                      alt=""
-                      fill={true}
-                      style={{ objectFit: "contain" }}
-                    />
-                  </motion.div>
-                </AnimatePresence>
+        <Overlay>
+          {galleryItem && (
+            <>
+              {galleryItem.previous && (
+                <Link
+                  onClick={() => setSlideDirection("left")}
+                  href={`/gallery/${getGalleryUrlStringFromTitle(
+                    galleryItem.previous
+                  )}`}
+                >
+                  <div className={`${styles.arrow} ${styles.left}`}>
+                    <div
+                      className={`${styles.innerArrow} ${styles.left}`}
+                    ></div>
+                  </div>
+                </Link>
+              )}
+              <AnimatePresence>
+                <motion.div
+                  key={galleryItem.title}
+                  initial={{
+                    translateX: `${
+                      !slideDirection
+                        ? "0"
+                        : slideDirection === "left"
+                        ? "-"
+                        : ""
+                    }1000px`,
+                  }}
+                  animate={{ translateX: "0" }}
+                  exit={{
+                    translateX: `${
+                      slideDirection === "left" ? " " : "-"
+                    }1000px`,
+                  }}
+                  className={styles.imageMotionContainer}
+                >
+                  <Image
+                    src={`${getApiUrlBase()}${
+                      galleryItem.image.data.attributes.url
+                    }`}
+                    alt=""
+                    fill={true}
+                    style={{ objectFit: "contain" }}
+                  />
+                </motion.div>
+              </AnimatePresence>
 
-                {galleryItem.next && (
-                  <Link
-                    href={`/gallery/${getGalleryUrlStringFromTitle(
-                      galleryItem.next
-                    )}`}
-                  >
-                    <div className={`${styles.arrow} ${styles.right}`}>
-                      <div
-                        className={`${styles.innerArrow} ${styles.right}`}
-                      ></div>
-                    </div>
-                  </Link>
-                )}
-              </>
-            )}
-          </div>
-        </div>
+              {galleryItem.next && (
+                <Link
+                  onClick={() => setSlideDirection("right")}
+                  href={`/gallery/${getGalleryUrlStringFromTitle(
+                    galleryItem.next
+                  )}`}
+                >
+                  <div className={`${styles.arrow} ${styles.right}`}>
+                    <div
+                      className={`${styles.innerArrow} ${styles.right}`}
+                    ></div>
+                  </div>
+                </Link>
+              )}
+            </>
+          )}
+        </Overlay>
         <HomeSplash />
         {/* <ScrollGallery images={images} notFound={notFound} /> */}
       </main>
