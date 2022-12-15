@@ -1,6 +1,6 @@
 @import "./variables.scss";
-$arrowTransition: color 0.2s ease-in-out, background-color 0.2s ease-in-out,
-  opacity 0.2s ease-in-out;
+@import "./mixins.scss";
+
 .overlay {
   display: flex;
   flex-direction: column;
@@ -24,6 +24,31 @@ $arrowTransition: color 0.2s ease-in-out, background-color 0.2s ease-in-out,
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
 
+    .close {
+      width: 70px;
+      height: 36px;
+
+      text-align: center;
+      line-height: 36px;
+
+      position: fixed;
+      right: 1%;
+      z-index: 110;
+
+      @include baseTransition;
+
+      @include proxima-nova-light;
+      font-size: 3em;
+      color: $red;
+      text-decoration: none;
+
+      &:hover {
+        cursor: pointer;
+        background-color: $red;
+        color: $white;
+      }
+    }
+
     .arrow {
       height: 100%;
       width: 75px;
@@ -46,7 +71,7 @@ $arrowTransition: color 0.2s ease-in-out, background-color 0.2s ease-in-out,
       justify-content: center;
       align-items: center;
 
-      transition: $arrowTransition;
+      @include baseTransition;
 
       &.left {
         left: 0px;
@@ -64,7 +89,7 @@ $arrowTransition: color 0.2s ease-in-out, background-color 0.2s ease-in-out,
         background-image: url(/images/homesplash-tiles-downarrow.svg);
         background-size: contain;
 
-        transition: $arrowTransition;
+        @include baseTransition;
 
         &.left {
           transform: rotate(90deg);

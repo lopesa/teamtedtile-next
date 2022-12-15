@@ -31,6 +31,9 @@ export default function GalleryItem({ galleryItem }: props) {
       <main>
         <div className={styles.overlay}>
           <div className={styles.innerOverlay}>
+            <Link href="/" className={styles.close}>
+              &times;
+            </Link>
             {galleryItem && (
               <>
                 {galleryItem.previous && (
