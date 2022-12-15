@@ -31,37 +31,45 @@ export default function GalleryItem({ galleryItem }: props) {
       <main>
         <div className={styles.overlay}>
           <div className={styles.innerOverlay}>
-            {/* <h1>gallery item: {galleryItem?.title}</h1> */}
             {galleryItem && (
-              <Image
-                src={`${getApiUrlBase()}${
-                  galleryItem.image.data.attributes.url
-                }`}
-                alt=""
-                fill={true}
-                style={{ objectFit: "contain" }}
-              />
+              <>
+                {galleryItem.previous && (
+                  <Link
+                    href={`/gallery/${getGalleryUrlStringFromTitle(
+                      galleryItem.previous
+                    )}`}
+                  >
+                    <div className={`${styles.arrow} ${styles.left}`}>
+                      <div
+                        className={`${styles.innerArrow} ${styles.left}`}
+                      ></div>
+                    </div>
+                  </Link>
+                )}
+                <Image
+                  src={`${getApiUrlBase()}${
+                    galleryItem.image.data.attributes.url
+                  }`}
+                  alt=""
+                  fill={true}
+                  style={{ objectFit: "contain" }}
+                />
+
+                {galleryItem.next && (
+                  <Link
+                    href={`/gallery/${getGalleryUrlStringFromTitle(
+                      galleryItem.next
+                    )}`}
+                  >
+                    <div className={`${styles.arrow} ${styles.right}`}>
+                      <div
+                        className={`${styles.innerArrow} ${styles.right}`}
+                      ></div>
+                    </div>
+                  </Link>
+                )}
+              </>
             )}
-            <div className={styles.navTemp}>
-              {galleryItem?.previous && (
-                <Link
-                  href={`/gallery/${getGalleryUrlStringFromTitle(
-                    galleryItem.previous
-                  )}`}
-                >
-                  prev
-                </Link>
-              )}
-              {galleryItem?.next && (
-                <Link
-                  href={`/gallery/${getGalleryUrlStringFromTitle(
-                    galleryItem.next
-                  )}`}
-                >
-                  next
-                </Link>
-              )}
-            </div>
           </div>
         </div>
         <HomeSplash />

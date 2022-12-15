@@ -1,4 +1,6 @@
 @import "./variables.scss";
+$arrowTransition: color 0.2s ease-in-out, background-color 0.2s ease-in-out,
+  opacity 0.2s ease-in-out;
 .overlay {
   display: flex;
   flex-direction: column;
@@ -22,9 +24,58 @@
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
 
-    .navTemp {
-      //   background-color: black;
-      z-index: 101;
+    .arrow {
+      height: 100%;
+      width: 75px;
+      position: absolute;
+      line-height: 100%;
+      color: $blue;
+      font-size: 4em;
+      cursor: pointer;
+      &:hover {
+        background-color: $light-warm-grey-50;
+        > * {
+          filter: hue-rotate(200deg) brightness(120%) opacity(75%);
+          -webkit-filter: hue-rotate(200deg) brightness(120%) opacity(75%);
+        }
+      }
+
+      z-index: 10;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      transition: $arrowTransition;
+
+      &.left {
+        left: 0px;
+        top: 0px;
+      }
+
+      &.right {
+        right: 0px;
+        top: 0px;
+      }
+
+      .innerArrow {
+        width: 35px;
+        height: 35px;
+        background-image: url(/images/homesplash-tiles-downarrow.svg);
+        background-size: contain;
+
+        transition: $arrowTransition;
+
+        &.left {
+          transform: rotate(90deg);
+          margin-right: 15px;
+        }
+
+        &.right {
+          transform: rotate(-90deg);
+          margin-left: 15px;
+        }
+      }
     }
   }
 }
