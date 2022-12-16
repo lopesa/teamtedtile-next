@@ -1,10 +1,20 @@
 import Link from "next/link";
+import { PropsWithChildren } from "react";
 import styles from "../styles/menu.module.scss";
 import ActiveLink from "./activeLink";
 
-export default function Menu() {
+type MenuProps = {
+  backgroundColor?: string;
+};
+
+export default function Menu({
+  backgroundColor,
+}: PropsWithChildren<MenuProps>) {
   return (
-    <nav className={styles.menuContainer}>
+    <nav
+      className={styles.menuContainer}
+      style={{ backgroundColor: backgroundColor }}
+    >
       <ul>
         <li>
           <ActiveLink

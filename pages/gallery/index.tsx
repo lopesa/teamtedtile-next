@@ -1,6 +1,7 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import HomeSplash from "../../components/homeSplash";
+import Menu from "../../components/menu";
 import ScrollGallery from "../../components/scrollGallery";
 import { IGalleryItemsResponse, IGalleryItem } from "../../interfaces/gallery";
 import { getApiUrlBase } from "../../utils";
@@ -26,6 +27,7 @@ export default function HomeGallery({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <Menu />
       <main>
         <HomeSplash />
         <ScrollGallery images={images} notFound={notFound} />

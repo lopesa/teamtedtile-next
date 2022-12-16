@@ -1,0 +1,45 @@
+@import "./variables.scss";
+@import "../styles/mixins.scss";
+
+.banner {
+  width: 100%;
+  height: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  .title {
+    position: relative;
+    height: 100%;
+    width: 80%;
+    z-index: 50;
+
+    color: $light-warm-grey;
+    letter-spacing: -0.05em;
+
+    font-size: 7em;
+
+    // @include breakpoint($phone-ipad) {
+    //     width: 60%;
+    // }
+
+    // @include breakpoint($ipad) {
+    //     font-size: 9em;
+    // }
+
+    // @include breakpoint($ipad-wide) {
+    //     width: 45%;
+    // }
+
+    @media screen and (min-width: $ipad-wide) {
+      width: 45%;
+    }
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+
+    @include proxima-nova-very-light;
+  }
+}
