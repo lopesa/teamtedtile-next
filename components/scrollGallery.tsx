@@ -11,7 +11,7 @@ export default function ScrollGallery({
   notFound: boolean;
 }) {
   return (
-    <main>
+    <section>
       {notFound && <h1>Images Not Found</h1>}
       {!notFound && (
         <ul>
@@ -37,6 +37,6 @@ export default function ScrollGallery({
           </li>
         </ul>
       )}
-    </main>
+    </section>
   );
 }

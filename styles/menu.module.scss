@@ -1,0 +1,80 @@
+@import "../styles/mixins.scss";
+@import "../styles/variables.scss";
+
+.menuContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+
+  position: fixed;
+  z-index: 55;
+
+  @include baseTransition;
+
+  padding-left: 10px;
+
+  .category {
+    height: 100%;
+    padding: 12px 8px 4px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: $warm-grey;
+
+    @include proxima-nova-light;
+    text-transform: uppercase;
+    font-size: 1.35em;
+    line-height: 1em;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    @include baseTransition;
+
+    &.active,
+    &:hover {
+      color: $white;
+      background-color: $mid-warm-grey;
+    }
+  }
+
+  .social {
+    padding: 8px 0 0 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    align-self: flex-start;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: initial;
+      cursor: pointer;
+    }
+
+    .twitter,
+    .facebook,
+    .pinterest {
+      width: 17px;
+      height: 17px;
+      margin-right: 15px;
+      background-size: contain;
+    }
+
+    .twitter {
+      background-image: url(/images/Twitter_Logo_White_On_Blue.svg);
+    }
+
+    .facebook {
+      background-image: url(/images/FB-f-Logo.png);
+    }
+
+    .pinterest {
+      background-image: url(/images/pinterest_icon_64x64.png);
+    }
+  }
+}

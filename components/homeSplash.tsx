@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
-import styles from "./homeSplash.module.scss";
-import Image from "next/image";
-import TILES_DOWN_ARROW from "../public/images/homesplash-tiles-downarrow.svg";
+import styles from "../styles/homeSplash.module.scss";
+import Link from "next/link";
 
-// interface Props {
-// }
-
-// function WorkItem({ item, alignment, onClick }: Props) {
 function HomeSplash() {
   // const [smallScreen, setSmallScreen] = useState(false)
 
@@ -19,10 +14,9 @@ function HomeSplash() {
         <div className={styles.one}>
           <h1>Team Ted Tile</h1>
           <div className={styles.container}>
-            {/* <a href="gallery" data-navigo> */}
-            <a href="gallery">
+            <Link href="/gallery">
               <div className={styles.downArrow}></div>
-            </a>
+            </Link>
             <h4>Professional Tile Installer</h4>
           </div>
           <p>Bay Area, California since before 2000</p>

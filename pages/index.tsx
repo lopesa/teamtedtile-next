@@ -4,11 +4,12 @@ import HomeSplash from "../components/homeSplash";
 import ScrollGallery from "../components/scrollGallery";
 import { IGalleryItemsResponse, IGalleryItem } from "../interfaces/gallery";
 import { getApiUrlBase } from "../utils";
+import Menu from "../components/menu";
 
 /**
- * this page and the gallery are duped code mostly but I am seeing that
+ * this page and the gallery are duped code (getStaticProps) but I am seeing that
  * it's not wise to refactor out the getStaticProps call to a common place
- * think about just factoring out the core of it later
+ * think about just factoring out the core of it later somehow
  */
 
 export default function Home({
@@ -27,6 +28,7 @@ export default function Home({
       </Head>
 
       <main>
+        <Menu />
         <HomeSplash />
         <ScrollGallery images={images} notFound={notFound} />
       </main>
