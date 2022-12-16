@@ -9,10 +9,18 @@
 
   position: fixed;
   z-index: 55;
+  margin: 0;
 
   @include baseTransition;
 
   padding-left: 10px;
+
+  ul {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0;
+  }
 
   .category {
     height: 100%;

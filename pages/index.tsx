@@ -27,8 +27,8 @@ export default function Home({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <Menu />
       <main>
-        <Menu />
         <HomeSplash />
         <ScrollGallery images={images} notFound={notFound} />
       </main>

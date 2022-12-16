@@ -1,18 +1,39 @@
 import Link from "next/link";
 import styles from "../styles/menu.module.scss";
+import ActiveLink from "./activeLink";
 
-function Menu() {
+export default function Menu() {
   return (
-    <div className={styles.menuContainer}>
-      <Link className={styles.category} href="/gallery">
-        Gallery
-      </Link>
-      <Link className={styles.category} href="/about">
-        About
-      </Link>
-      <Link className={styles.category} href="/contact">
-        Contact
-      </Link>
+    <nav className={styles.menuContainer}>
+      <ul>
+        <li>
+          <ActiveLink
+            activeClassName={styles.active}
+            className={styles.category}
+            href="/gallery"
+          >
+            Gallery
+          </ActiveLink>
+        </li>
+        <li>
+          <ActiveLink
+            activeClassName={styles.active}
+            className={styles.category}
+            href="/about"
+          >
+            About
+          </ActiveLink>
+        </li>
+        <li>
+          <ActiveLink
+            activeClassName={styles.active}
+            className={styles.category}
+            href="/contact"
+          >
+            Contact
+          </ActiveLink>
+        </li>
+      </ul>
       <div className={styles.social}>
         <a>
           <div className={styles.facebook}></div>
@@ -21,8 +42,6 @@ function Menu() {
           <div className={styles.twitter}></div>
         </a>
       </div>
-    </div>
+    </nav>
   );
 }
-
-export default Menu;
