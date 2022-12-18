@@ -1,13 +1,13 @@
 import { PropsWithChildren } from "react";
 import styles from "../styles/OverlayImageHeader.module.scss";
 
-type OverlayImageProps = {
+interface OverlayImageProps extends React.HTMLAttributes<HTMLDivElement> {
   backgroundImage?: string;
   backgroundPosition?: string;
   backgroundSize?: string;
   copyright?: string;
   title: string;
-};
+}
 
 export default function OverlayImageHeader({
   backgroundImage,
@@ -15,6 +15,7 @@ export default function OverlayImageHeader({
   backgroundSize,
   copyright,
   title,
+  ...props
 }: PropsWithChildren<OverlayImageProps>) {
   return (
     <div
@@ -23,6 +24,7 @@ export default function OverlayImageHeader({
         backgroundImage: `url(${backgroundImage})`,
         backgroundPosition: backgroundPosition,
         backgroundSize: backgroundSize,
+        ...props.style,
       }}
     >
       {copyright && <div className="copyright">Photo &copy; {copyright}</div>}
