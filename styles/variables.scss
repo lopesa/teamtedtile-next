@@ -1,6 +1,7 @@
 $horizontal-breaker: (min-height 450px);
 
-$big-phone: 359px (min-height 450px);
+// $big-phone: 359px (min-height 450px);
+$big-phone: 359px;
 $iphone6plusCatcher: 412px (min-height 450px);
 // $phone-ipad: 550px (min-height 450px);
 $phone-ipad: 550px;
@@ -8,7 +9,8 @@ $phone-ipad: 550px;
 $ipadwidth-desktop: 767px;
 
 // $ipadwidth-desktop: (min-width 767px) and (min-height 450px);
-$ipad: (767px) (min-height 900px);
+// $ipad: (767px) (min-height 900px);
+$ipad: 767px;
 $ipad-wide: 1024px;
 // $ipad-wide: 1024px (min-height 450px);
 $real-wide: 1100px (min-height 450px);

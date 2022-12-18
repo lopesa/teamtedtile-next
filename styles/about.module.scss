@@ -1,16 +1,15 @@
 .aboutContainer {
   .photos {
-    // @include flexy(row);
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 8px 0 27px;
 
     .photo {
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      // @include flexy(row);
 
       flex: 1 1 0;
 
@@ -39,5 +38,66 @@
       // 	margin: 18px 0 27px;
       // }
     }
+  }
+
+  @import "./variables.scss";
+  @import "./mixins.scss";
+  .logoblock {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    width: 100%;
+
+    margin-top: 10px;
+
+    p,
+    .mobile-license {
+      font-size: 1.2em;
+
+      @include proxima-nova-bold;
+
+      line-height: 1.2em;
+
+      margin: 0 0 23px 6px;
+    }
+
+    p {
+      display: none;
+
+      @media screen and (min-width: $ipad) {
+        display: block;
+      }
+    }
+
+    .mobile-license {
+      @media screen and (min-width: $ipad) {
+        display: none;
+      }
+    }
+  }
+
+  .logocopy {
+    font-size: 1.2em;
+
+    @include proxima-nova-light-italic;
+
+    line-height: 1em;
+
+    margin: 0 0 30px 6px;
+
+    @media screen and (min-width: $ipad) {
+      display: none;
+    }
+  }
+
+  .logo {
+    background-image: url(/images/ttt_logo.png);
+
+    background-size: contain;
+
+    width: 85px;
+    height: 85px;
+
+    margin-bottom: 20px;
   }
 }

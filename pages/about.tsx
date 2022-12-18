@@ -34,8 +34,8 @@ interface IAboutProps extends IAboutData {
 }
 
 export default function About({ copy, bodyImages }: IAboutProps) {
-  copy = copy.replace(/\n\s*\n/g, "\n");
-  let copyAsArray = copy.length ? copy.split(/\n/) : [];
+  copy = copy.replace(/\n/, "\n");
+  let copyAsArray = copy.length ? copy.split(/\n/).filter((a) => a.length) : [];
   return (
     <>
       <Overlay>
@@ -49,7 +49,7 @@ export default function About({ copy, bodyImages }: IAboutProps) {
             style={{ flexShrink: 0 }}
           />
           <div className={`overlay-body ${styles.aboutContainer}`}>
-            {copy.length &&
+            {copyAsArray.length &&
               copyAsArray.map((p: string, i: number) => {
                 const paragraph = <p key={i}>{p}</p>;
                 const insert =
@@ -82,6 +82,17 @@ export default function About({ copy, bodyImages }: IAboutProps) {
                   );
                 return insert;
               })}
+
+            <div className={styles.logoblock}>
+              <div className={styles.logo}></div>
+              <p>
+                license #814515<br></br> Team Ted Tile is licensed, bonded and
+                insured.
+              </p>
+            </div>
+            <div className={styles.logocopy}>
+              Team Ted Tile is licensed, bonded and insured.
+            </div>
           </div>
         </>
       </Overlay>
