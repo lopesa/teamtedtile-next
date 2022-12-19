@@ -1,9 +1,9 @@
 import { GetStaticProps } from "next";
-import HomeSplash from "../components/homeSplash";
-import Overlay from "../components/overlay";
-import OverlayImageHeader from "../components/OverlayImageHeader";
-import styles from "../styles/about.module.scss";
-import { getApiUrlBase } from "../utils";
+import HomeSplash from "components/homeSplash";
+import Overlay from "components/overlay";
+import OverlayImageHeader from "components/OverlayImageHeader";
+import styles from "styles/about.module.scss";
+import { getApiUrlBase } from "utils";
 import Image from "next/image";
 
 type IAboutData = {
@@ -51,10 +51,9 @@ export default function About({ copy, bodyImages }: IAboutProps) {
           <div className={`overlay-body ${styles.aboutContainer}`}>
             {copyAsArray.length &&
               copyAsArray.map((p: string, i: number) => {
-                const paragraph = <p key={i}>{p}</p>;
                 const insert =
                   i === copyAsArray.length - 2 ? (
-                    <>
+                    <div key={i}>
                       <div className={styles.photos}>
                         {bodyImages?.data.length &&
                           bodyImages.data.map((img, i) => {
@@ -75,10 +74,10 @@ export default function About({ copy, bodyImages }: IAboutProps) {
                             );
                           })}
                       </div>
-                      {paragraph}
-                    </>
+                      <p>{p}</p>
+                    </div>
                   ) : (
-                    paragraph
+                    <p key={i}>{p}</p>
                   );
                 return insert;
               })}

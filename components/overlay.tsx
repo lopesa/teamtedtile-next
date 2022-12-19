@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PropsWithChildren } from "react";
-import styles from "../styles/overlay.module.scss";
+import styles from "styles/overlay.module.scss";
 import Menu from "./menu";
 
 export default function Overlay(props: PropsWithChildren) {

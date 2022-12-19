@@ -1,3 +1,6 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+
 .aboutContainer {
   .photos {
     display: flex;
@@ -40,8 +43,6 @@
     }
   }
 
-  @import "./variables.scss";
-  @import "./mixins.scss";
   .logoblock {
     display: flex;
     justify-content: flex-start;

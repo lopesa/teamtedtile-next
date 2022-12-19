@@ -1,10 +1,10 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
-import HomeSplash from "../../components/homeSplash";
-import Menu from "../../components/menu";
-import ScrollGallery from "../../components/scrollGallery";
-import { IGalleryItemsResponse, IGalleryItem } from "../../interfaces/gallery";
-import { getApiUrlBase } from "../../utils";
+import HomeSplash from "components/homeSplash";
+import Menu from "components/menu";
+import ScrollGallery from "components/scrollGallery";
+import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
+import { getApiUrlBase } from "utils";
 
 /**
  * this page and the index are duped code mostly but I am seeing that

@@ -1,10 +1,10 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
-import HomeSplash from "../components/homeSplash";
-import ScrollGallery from "../components/scrollGallery";
-import { IGalleryItemsResponse, IGalleryItem } from "../interfaces/gallery";
-import { getApiUrlBase } from "../utils";
-import Menu from "../components/menu";
+import HomeSplash from "components/homeSplash";
+import ScrollGallery from "components/scrollGallery";
+import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
+import { getApiUrlBase } from "utils";
+import Menu from "components/menu";
 
 /**
  * this page and the gallery are duped code (getStaticProps) but I am seeing that

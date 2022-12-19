@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PropsWithChildren } from "react";
-import styles from "../styles/menu.module.scss";
+import styles from "styles/menu.module.scss";
 import ActiveLink from "./activeLink";
 
 type MenuProps = {

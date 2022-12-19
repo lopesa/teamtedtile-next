@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "../styles/homeSplash.module.scss";
+import styles from "styles/homeSplash.module.scss";
 import Link from "next/link";
 
 function HomeSplash() {

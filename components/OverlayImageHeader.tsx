@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import styles from "../styles/OverlayImageHeader.module.scss";
+import styles from "styles/OverlayImageHeader.module.scss";
 
 interface OverlayImageProps extends React.HTMLAttributes<HTMLDivElement> {
   backgroundImage?: string;

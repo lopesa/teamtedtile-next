@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { IGalleryItem } from "../interfaces/gallery";
+import { IGalleryItem } from "interfaces/gallery";
 import Link from "next/link";
-import { getGalleryUrlStringFromTitle, getApiUrlBase } from "../utils";
+import { getGalleryUrlStringFromTitle, getApiUrlBase } from "utils";
 
 export default function ScrollGallery({
   images,

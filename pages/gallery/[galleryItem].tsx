@@ -1,19 +1,19 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { IGalleryItem, IGalleryItemsResponse } from "../../interfaces/gallery";
+import { IGalleryItem, IGalleryItemsResponse } from "interfaces/gallery";
 import {
   getApiUrlBase,
   getGalleryUrlStringFromTitle,
   getGalleryTitleFromUrlString,
-} from "../../utils";
+} from "utils";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
-import styles from "../../styles/galleryItem.module.scss";
+import styles from "styles/galleryItem.module.scss";
 import Head from "next/head";
-import HomeSplash from "../../components/homeSplash";
+import HomeSplash from "components/homeSplash";
 import { motion, AnimatePresence } from "framer-motion";
-import ScrollGallery from "../../components/scrollGallery";
-import Overlay from "../../components/overlay";
+import ScrollGallery from "components/scrollGallery";
+import Overlay from "components/overlay";
 import { useState } from "react";
 
 interface props {

@@ -1,6 +1,6 @@
-import HomeSplash from "../components/homeSplash";
-import Overlay from "../components/overlay";
-import OverlayImageHeader from "../components/OverlayImageHeader";
+import HomeSplash from "components/homeSplash";
+import Overlay from "components/overlay";
+import OverlayImageHeader from "components/OverlayImageHeader";
 
 export default function Contact() {
   return (
