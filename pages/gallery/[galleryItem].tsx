@@ -8,7 +8,7 @@ import {
 } from "utils";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
-import styles from "styles/galleryItem.module.scss";
+import styles from "styles/GalleryItem.module.scss";
 import Head from "next/head";
 import HomeSplash from "components/homeSplash";
 import { motion, AnimatePresence } from "framer-motion";
