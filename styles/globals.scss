@@ -2,7 +2,9 @@
 @import "./variables.scss";
 @import "~sanitize.css";
 
-* {
+// * {
+:root {
+  // font-size: 10.6px;
   font-size: 11px;
 }
 

@@ -12,7 +12,7 @@ import styles from "styles/GalleryItem.module.scss";
 import Head from "next/head";
 import HomeSplash from "components/homeSplash";
 import { motion, AnimatePresence } from "framer-motion";
-import ScrollGallery from "components/scrollGallery";
+import ScrollGallery from "components/ScrollGallery";
 import Overlay from "components/overlay";
 import { useState } from "react";
 
@@ -52,7 +52,9 @@ export default function GalleryItem({ galleryItem }: props) {
                   </div>
                 </Link>
               )}
-              <AnimatePresence>
+              {/** @TODO: You are trying to animate translateX from "1000" to "0". 1000 is not an animatable value -
+               * to enable this animation set 1000 to a value animatable to 0 via the `style` property. */}
+              {/* <AnimatePresence>
                 <motion.div
                   key={galleryItem.title}
                   initial={{
@@ -71,17 +73,17 @@ export default function GalleryItem({ galleryItem }: props) {
                     }1000px`,
                   }}
                   className={styles.imageMotionContainer}
-                >
-                  <Image
-                    src={`${getApiUrlBase()}${
-                      galleryItem.image.data.attributes.url
-                    }`}
-                    alt=""
-                    fill={true}
-                    style={{ objectFit: "contain" }}
-                  />
-                </motion.div>
-              </AnimatePresence>
+                > */}
+              <Image
+                src={`${getApiUrlBase()}${
+                  galleryItem.image.data.attributes.url
+                }`}
+                alt=""
+                fill={true}
+                style={{ objectFit: "contain" }}
+              />
+              {/* </motion.div>
+              </AnimatePresence> */}
 
               {galleryItem.next && (
                 <Link

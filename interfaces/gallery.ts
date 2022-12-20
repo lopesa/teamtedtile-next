@@ -21,6 +21,7 @@ export interface IGalleryItem {
           url: string;
           width: number;
           height: number;
+          alternativeText: string;
         };
       };
     };
