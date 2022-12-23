@@ -5,6 +5,7 @@ import Menu from "components/menu";
 import ScrollGallery from "components/ScrollGallery";
 import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
 import { getApiUrlBase } from "utils";
+import { RefObject, useEffect, useRef } from "react";
 
 /**
  * this page and the index are duped code mostly but I am seeing that
@@ -12,13 +13,18 @@ import { getApiUrlBase } from "utils";
  * think about just factoring out the core of it later
  */
 
-export default function HomeGallery({
-  images,
-  notFound,
-}: {
+interface HomeGalleryProps {
   images: IGalleryItem[];
   notFound: boolean;
-}) {
+}
+
+export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
+  const scrollGalleryRef = useRef<HTMLElement>(null);
+  const scrollGalleryRefIntoView = (
+    scrollGalleryRefPass: RefObject<HTMLElement>
+  ) => {
+    scrollGalleryRefPass?.current?.scrollIntoView({ behavior: "smooth" });
+  };
   return (
     <>
       <Head>
@@ -30,14 +36,21 @@ export default function HomeGallery({
       <Menu />
       <main>
         <HomeSplash />
-        <ScrollGallery images={images} notFound={notFound} />
+        <ScrollGallery
+          ref={scrollGalleryRef}
+          images={images}
+          notFound={notFound}
+          onLayoutSetMethods={[
+            scrollGalleryRefIntoView.bind(HomeGallery, scrollGalleryRef),
+          ]}
+        />
       </main>
     </>
   );
 }
 
 export const getStaticProps: GetStaticProps = async (): Promise<{
-  props: { images: IGalleryItem[]; notFound: boolean };
+  props: HomeGalleryProps;
 }> => {
   // https://developer.mozilla.org/en-US/docs/Web/API/fetch
   const res = await fetch(

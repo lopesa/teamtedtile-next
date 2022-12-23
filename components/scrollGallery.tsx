@@ -6,14 +6,8 @@ import createJustifiedLayout from "justified-layout";
 import styles from "styles/ScrollGallery.module.scss";
 import tedHeadImg from "public/images/ted_calvert_icon.png";
 import useWindowSize from "hooks/useWindowSize";
-import { useEffect, useState } from "react";
-
-enum BREAKPOINTS {
-  LARGE = 1100, // container 768
-  MEDIUM = 800, // container 600
-  SMALL = 620, // container 380
-  XSMALL = 400, // container 325
-}
+import { useEffect, useState, forwardRef, Ref } from "react";
+import { BREAKPOINTS } from "enums/Breakpoints";
 
 enum GALLERY_WIDTHS {
   MOBILE = 325,
@@ -23,13 +17,19 @@ enum GALLERY_WIDTHS {
   DESKTOP = 1060,
 }
 
-export default function ScrollGallery({
-  images,
-  notFound,
-}: {
+interface ScrollGalleryProps {
   images: IGalleryItem[];
   notFound: boolean;
-}) {
+  onLayoutSetMethods?: ((...args: any) => void)[];
+}
+
+const ScrollGallery = (
+  { images, notFound, onLayoutSetMethods }: ScrollGalleryProps,
+  ref: Ref<HTMLElement> | undefined
+) => {
+  const [initialLayoutSet, setInitialLayoutSet] = useState(false);
+  const [layoutSetMethodsExectuted, setLayoutSetMethodsExectuted] =
+    useState(false);
   const getImagesAspectRatios = (images: IGalleryItem[]) => {
     return images.map((image) => {
       return (
@@ -66,7 +66,6 @@ export default function ScrollGallery({
 
   useEffect(() => {
     setGalleryWidth(getGalleryWidth(windowSize.innerWidth));
-    console.log("windowSize", windowSize);
   }, [windowSize]);
 
   useEffect(() => {
@@ -76,10 +75,29 @@ export default function ScrollGallery({
         containerWidth: galleryWidth,
       }),
     });
-  }, [images, galleryWidth]);
+    if (!initialLayoutSet) {
+      setInitialLayoutSet(true);
+    }
+  }, [images, galleryWidth, initialLayoutSet]);
+
+  useEffect(() => {
+    if (!initialLayoutSet) {
+      return;
+    }
+    if (layoutSetMethodsExectuted) {
+      return;
+    }
+    onLayoutSetMethods?.forEach((method) => method());
+    setLayoutSetMethodsExectuted(true);
+  }, [
+    galleryWidth,
+    initialLayoutSet,
+    onLayoutSetMethods,
+    layoutSetMethodsExectuted,
+  ]);
 
   return (
-    <section className={styles.scrollGalleryContainer}>
+    <section ref={ref} className={styles.scrollGalleryContainer}>
       {notFound && <h1>Images Not Found</h1>}
       {!notFound && galleryLayoutInfo && (
         <div
@@ -158,4 +176,6 @@ export default function ScrollGallery({
       )} */}
     </section>
   );
-}
+};
+
+export default forwardRef(ScrollGallery);
