@@ -28,7 +28,7 @@ export default function OverlayImageHeader({
       }}
     >
       {copyright && <div className="copyright">Photo &copy; {copyright}</div>}
-      <div className={styles.title}>{title}</div>
+      <h1 className={styles.title}>{title}</h1>
     </div>
   );
 }

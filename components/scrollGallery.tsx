@@ -4,6 +4,24 @@ import Link from "next/link";
 import { getGalleryUrlStringFromTitle, getApiUrlBase } from "utils";
 import createJustifiedLayout from "justified-layout";
 import styles from "styles/ScrollGallery.module.scss";
+import tedHeadImg from "public/images/ted_calvert_icon.png";
+import useWindowSize from "hooks/useWindowSize";
+import { useEffect, useState } from "react";
+
+enum BREAKPOINTS {
+  LARGE = 1100, // container 768
+  MEDIUM = 800, // container 600
+  SMALL = 620, // container 380
+  XSMALL = 400, // container 325
+}
+
+enum GALLERY_WIDTHS {
+  MOBILE = 325,
+  MOBILE_LARGE = 380,
+  TABLET_SMALL = 600,
+  TABLET = 768,
+  DESKTOP = 1060,
+}
 
 export default function ScrollGallery({
   images,
@@ -20,24 +38,69 @@ export default function ScrollGallery({
       );
     });
   };
-  const imageContainerWidth = 1060;
-  const layoutGeometry = createJustifiedLayout(getImagesAspectRatios(images), {
-    containerWidth: imageContainerWidth,
-    // fullWidthBreakoutRowCadence: 2,
-  });
+
+  const getGalleryWidth = (windowWidth: number) => {
+    if (windowWidth > BREAKPOINTS.LARGE) {
+      return GALLERY_WIDTHS.DESKTOP;
+    } else if (windowWidth > BREAKPOINTS.MEDIUM) {
+      return GALLERY_WIDTHS.TABLET;
+    } else if (windowWidth > BREAKPOINTS.SMALL) {
+      return GALLERY_WIDTHS.TABLET_SMALL;
+    } else if (windowWidth > BREAKPOINTS.XSMALL) {
+      return GALLERY_WIDTHS.MOBILE_LARGE;
+    } else {
+      return GALLERY_WIDTHS.MOBILE;
+    }
+  };
+  const windowSize = useWindowSize();
+  const [galleryWidth, setGalleryWidth] = useState(
+    getGalleryWidth(windowSize.innerWidth)
+  );
+  const [galleryLayoutInfo, setGalleryLayoutInfo] = useState<
+    | undefined
+    | {
+        imageContainerWidth: number;
+        layoutGeometry: ReturnType<typeof createJustifiedLayout>;
+      }
+  >(undefined);
+
+  useEffect(() => {
+    setGalleryWidth(getGalleryWidth(windowSize.innerWidth));
+    console.log("windowSize", windowSize);
+  }, [windowSize]);
+
+  useEffect(() => {
+    setGalleryLayoutInfo({
+      imageContainerWidth: galleryWidth,
+      layoutGeometry: createJustifiedLayout(getImagesAspectRatios(images), {
+        containerWidth: galleryWidth,
+      }),
+    });
+  }, [images, galleryWidth]);
+
   return (
     <section className={styles.scrollGalleryContainer}>
       {notFound && <h1>Images Not Found</h1>}
-      {!notFound && (
+      {!notFound && galleryLayoutInfo && (
         <div
           style={{
-            height: `${layoutGeometry.containerHeight}`,
-            width: `${imageContainerWidth}px`,
+            height: `${galleryLayoutInfo?.layoutGeometry.containerHeight}px`,
+            width: `${galleryLayoutInfo?.imageContainerWidth}px`,
           }}
           className={styles.scrollGalleryImagesContainer}
         >
-          {layoutGeometry.boxes.length &&
-            layoutGeometry.boxes.map((box, index) => (
+          <h1>Gallery</h1>
+          <div className={styles.galleryHeader}>
+            <div className={styles.headerTedsHead}>
+              <Image src={tedHeadImg} alt="Ted's head" />
+            </div>
+            <h4>
+              <span>First things first!!!</span> Every tile shown, in every
+              image below installed by <span>Team&nbsp;Ted&nbsp;Tile.</span>{" "}
+            </h4>
+          </div>
+          {galleryLayoutInfo?.layoutGeometry.boxes.length &&
+            galleryLayoutInfo?.layoutGeometry.boxes.map((box, index) => (
               <div
                 key={index}
                 style={{
@@ -66,7 +129,7 @@ export default function ScrollGallery({
       )}
 
       {/**
-       * leave the followign for now, delete later probably. that is the more
+       * leave the following for now, delete later probably. that is the more
        * straightforward way to layout the images, not using the Flickr thing (justified-layout)
        */}
       {/* {!notFound && (
