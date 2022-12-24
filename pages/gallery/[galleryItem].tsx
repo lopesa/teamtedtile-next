@@ -14,7 +14,7 @@ import HomeSplash from "components/homeSplash";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollGallery from "components/ScrollGallery";
 import Overlay from "components/overlay";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface props {
   galleryItem: IGalleryItem["attributes"] | null;
@@ -25,6 +25,36 @@ export default function GalleryItem({ galleryItem }: props) {
   const [slideDirection, setSlideDirection] = useState<
     "left" | "right" | undefined
   >(undefined);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(0);
+
+  const getImagesContainerWidth = useCallback(() => 3 * width, [width]);
+  const getImagesContainerTranslateX = useCallback(() => width, [width]);
+  const [imagesContainerWidth, setImagesContainerWidth] = useState(
+    getImagesContainerWidth()
+  );
+  const [imagesContainerTranslateX, setImagesContainerTranslateX] = useState(
+    getImagesContainerTranslateX()
+  );
+
+  useEffect(() => {
+    if (ref.current !== null) {
+      setHeight(ref.current.offsetHeight);
+      setWidth(ref.current.offsetWidth);
+    }
+    // 👇️ if you need access to parent
+    // of the element on which you set the ref
+    // console.log(ref.current.parentElement);
+    // console.log(ref.current.parentElement.offsetHeight);
+    // console.log(ref.current.parentElement.offsetWidth);
+  }, []);
+
+  useEffect(() => {
+    setImagesContainerWidth(getImagesContainerWidth());
+    setImagesContainerTranslateX(getImagesContainerTranslateX());
+  }, [getImagesContainerTranslateX, getImagesContainerWidth, width]);
 
   return (
     <>
@@ -72,16 +102,45 @@ export default function GalleryItem({ galleryItem }: props) {
                       slideDirection === "left" ? " " : "-"
                     }1000px`,
                   }}
-                  className={styles.imageMotionContainer}
+                  className={styles.imageContainer}
                 > */}
-              <Image
-                src={`${getApiUrlBase()}${
-                  galleryItem.image.data.attributes.url
-                }`}
-                alt=""
-                fill={true}
-                style={{ objectFit: "contain" }}
-              />
+              <div ref={ref} className={styles.imageFrame}>
+                <div
+                  className={styles.imagesContainer}
+                  style={{
+                    width: `${imagesContainerWidth}px`,
+                    transform: `translateX(-${imagesContainerTranslateX}px)`,
+                  }}
+                >
+                  <Image
+                    src={`${getApiUrlBase()}${
+                      galleryItem.image.data.attributes.url
+                    }`}
+                    alt=""
+                    width={width}
+                    height={height}
+                    style={{ objectFit: "contain" }}
+                  />
+                  <Image
+                    src={`${getApiUrlBase()}${
+                      galleryItem.image.data.attributes.url
+                    }`}
+                    alt=""
+                    width={width}
+                    height={height}
+                    style={{ objectFit: "contain" }}
+                  />
+                  <Image
+                    src={`${getApiUrlBase()}${
+                      galleryItem.image.data.attributes.url
+                    }`}
+                    alt=""
+                    width={width}
+                    height={height}
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              </div>
               {/* </motion.div>
               </AnimatePresence> */}
 
