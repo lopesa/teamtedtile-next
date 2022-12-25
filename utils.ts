@@ -6,7 +6,7 @@ export const getApiUrlBase = () => {
 };
 
 export const getGalleryUrlStringFromTitle = (title: string): string => {
-  return title.replaceAll(/\s/g, "-");
+  return title?.replaceAll(/\s/g, "-");
 };
 
 export const getGalleryTitleFromUrlString = (

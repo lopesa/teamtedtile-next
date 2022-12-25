@@ -10,7 +10,7 @@ export interface IGalleryItemsResponse {
   };
 }
 export interface IGalleryItem {
-  id: number;
+  // id: number;
   attributes: {
     title: string;
     image: {
@@ -27,7 +27,36 @@ export interface IGalleryItem {
     };
     copyright?: string;
     tedheadText?: string;
-    previous?: string;
-    next?: string;
+    /**
+     * @TODO
+     * previous and next are just a hack to keep moving
+     * I somehow need to pass the previous and next additions
+     * on the backends through strapi's transformResponse
+     * which I thinks adds the layer of id/attributes obj wrapper
+     */
+    previous: {
+      copyright?: string;
+      tedheadText?: string;
+      title: string;
+      image: {
+        name: string;
+        url: string;
+        width: number;
+        height: number;
+        alternativeText: string;
+      };
+    } | null;
+    next: {
+      copyright?: string;
+      tedheadText?: string;
+      title: string;
+      image: {
+        name: string;
+        url: string;
+        width: number;
+        height: number;
+        alternativeText: string;
+      };
+    } | null;
   };
 }

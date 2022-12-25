@@ -72,7 +72,7 @@ export default function GalleryItem({ galleryItem }: props) {
                 <Link
                   onClick={() => setSlideDirection("left")}
                   href={`/gallery/${getGalleryUrlStringFromTitle(
-                    galleryItem.previous
+                    galleryItem.previous.title
                   )}`}
                 >
                   <div className={`${styles.arrow} ${styles.left}`}>
@@ -112,6 +112,17 @@ export default function GalleryItem({ galleryItem }: props) {
                     transform: `translateX(-${imagesContainerTranslateX}px)`,
                   }}
                 >
+                  {galleryItem.previous && (
+                    <Image
+                      src={`${getApiUrlBase()}${
+                        galleryItem.previous.image.url
+                      }`}
+                      alt=""
+                      width={width}
+                      height={height}
+                      style={{ objectFit: "contain" }}
+                    />
+                  )}
                   <Image
                     src={`${getApiUrlBase()}${
                       galleryItem.image.data.attributes.url
@@ -121,24 +132,15 @@ export default function GalleryItem({ galleryItem }: props) {
                     height={height}
                     style={{ objectFit: "contain" }}
                   />
-                  <Image
-                    src={`${getApiUrlBase()}${
-                      galleryItem.image.data.attributes.url
-                    }`}
-                    alt=""
-                    width={width}
-                    height={height}
-                    style={{ objectFit: "contain" }}
-                  />
-                  <Image
-                    src={`${getApiUrlBase()}${
-                      galleryItem.image.data.attributes.url
-                    }`}
-                    alt=""
-                    width={width}
-                    height={height}
-                    style={{ objectFit: "contain" }}
-                  />
+                  {galleryItem.next && (
+                    <Image
+                      src={`${getApiUrlBase()}${galleryItem.next.image.url}`}
+                      alt=""
+                      width={width}
+                      height={height}
+                      style={{ objectFit: "contain" }}
+                    />
+                  )}
                 </div>
               </div>
               {/* </motion.div>
@@ -148,7 +150,7 @@ export default function GalleryItem({ galleryItem }: props) {
                 <Link
                   onClick={() => setSlideDirection("right")}
                   href={`/gallery/${getGalleryUrlStringFromTitle(
-                    galleryItem.next
+                    galleryItem.next.title
                   )}`}
                 >
                   <div className={`${styles.arrow} ${styles.right}`}>
@@ -189,6 +191,7 @@ export const getStaticProps: GetStaticProps = async (
   ).catch((e) => {});
   if (res && res.ok) {
     const json = await res.json();
+    debugger;
     return { props: { galleryItem: json.data[0].attributes } };
   } else {
     return { props: { galleryItem: null } };
