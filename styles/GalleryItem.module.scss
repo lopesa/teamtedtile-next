@@ -4,9 +4,20 @@
 .imageFrame {
   height: 100%;
   width: 100%;
+  overflow: hidden;
+
+  // maybe temp
+  // position: relative;
+  // @include galleryTransition;
 
   .imagesContainer {
     display: flex;
+    // position: relative;
+    // animation-fill-mode: forwards;
+    // @include galleryTransition;
+    // img {
+    // position: absolute;
+    // }
   }
 }
 

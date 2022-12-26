@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import { IGalleryItem, IGalleryItemsResponse } from "interfaces/gallery";
 import {
@@ -14,47 +14,159 @@ import HomeSplash from "components/homeSplash";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollGallery from "components/ScrollGallery";
 import Overlay from "components/overlay";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useRef, useState } from "react";
+import { time } from "console";
 
 interface props {
   galleryItem: IGalleryItem["attributes"] | null;
 }
 
 export default function GalleryItem({ galleryItem }: props) {
-  // const router = useRouter();
-  const [slideDirection, setSlideDirection] = useState<
-    "left" | "right" | undefined
-  >(undefined);
-  const ref = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const frameRef = useRef<HTMLDivElement>(null);
+  const slideRef = useRef<HTMLDivElement>(null);
 
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
 
-  const getImagesContainerWidth = useCallback(() => 3 * width, [width]);
-  const getImagesContainerTranslateX = useCallback(() => width, [width]);
-  const [imagesContainerWidth, setImagesContainerWidth] = useState(
-    getImagesContainerWidth()
-  );
-  const [imagesContainerTranslateX, setImagesContainerTranslateX] = useState(
-    getImagesContainerTranslateX()
-  );
+  const [imagesContainerWidth, setImagesContainerWidth] = useState(0);
+  const [imagesContainerTranslateX, setImagesContainerTranslateX] = useState(0);
 
-  useEffect(() => {
-    if (ref.current !== null) {
-      setHeight(ref.current.offsetHeight);
-      setWidth(ref.current.offsetWidth);
+  const BASE_GALLERY_TRANSITION = "transform 1s ease-in-out";
+  const [baseGalleryTransition, setBaseGalleryTransition] = useState("none");
+
+  const [images, setImages] = useState({
+    leftImageSrc:
+      `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}` || "",
+    centerImageSrc:
+      `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}` || "",
+    rightImageSrc:
+      `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}` || "",
+  });
+
+  const getNextOrPreviousUrl = (direction: "left" | "right") => {
+    if (
+      !galleryItem ||
+      (direction === "left" && !galleryItem.previous) ||
+      (direction === "right" && !galleryItem.next)
+    ) {
+      return;
     }
-    // 👇️ if you need access to parent
-    // of the element on which you set the ref
-    // console.log(ref.current.parentElement);
-    // console.log(ref.current.parentElement.offsetHeight);
-    // console.log(ref.current.parentElement.offsetWidth);
-  }, []);
+    const galleryItemUrl = getGalleryUrlStringFromTitle(
+      direction === "left"
+        ? galleryItem.previous!.title
+        : galleryItem.next!.title
+    );
+    return `/gallery/${galleryItemUrl}`;
+  };
+
+  const doSlideAnimationThenChangeRoutes = async (
+    direction: "left" | "right",
+    elRef?: RefObject<HTMLDivElement>
+  ) => {
+    const goToUrl = getNextOrPreviousUrl(direction);
+    if (!goToUrl) {
+      return;
+    }
+
+    const transitionEndFunction = () => {
+      elRef?.current?.removeEventListener(
+        "transitionend",
+        transitionEndFunction
+      );
+      router.push(goToUrl);
+    };
+    elRef?.current?.addEventListener("transitionend", transitionEndFunction);
+    setImagesContainerTranslateX(direction === "left" ? 0 : -2 * width);
+  };
+
+  const escFunction = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        router.push("/gallery");
+      }
+    },
+    [router]
+  );
+
+  const setAllImagesToSame = (galleryItem: IGalleryItem["attributes"]) => {
+    setImages({
+      leftImageSrc: `${getApiUrlBase()}${
+        galleryItem?.image.data.attributes.url
+      }`,
+      rightImageSrc: `${getApiUrlBase()}${
+        galleryItem?.image.data.attributes.url
+      }`,
+      centerImageSrc: `${getApiUrlBase()}${
+        galleryItem?.image.data.attributes.url
+      }`,
+    });
+  };
+
+  const setAllImagesToFinal = (galleryItem: IGalleryItem["attributes"]) => {
+    setImages({
+      leftImageSrc: `${getApiUrlBase()}${galleryItem?.previous?.image.url}`,
+      centerImageSrc: `${getApiUrlBase()}${
+        galleryItem?.image.data.attributes.url
+      }`,
+      rightImageSrc: `${getApiUrlBase()}${galleryItem?.next?.image.url}`,
+    });
+  };
 
   useEffect(() => {
-    setImagesContainerWidth(getImagesContainerWidth());
-    setImagesContainerTranslateX(getImagesContainerTranslateX());
-  }, [getImagesContainerTranslateX, getImagesContainerWidth, width]);
+    document.addEventListener("keydown", escFunction, false);
+
+    return () => {
+      document.removeEventListener("keydown", escFunction, false);
+    };
+  }, [escFunction]);
+
+  useEffect(() => {
+    if (frameRef.current !== null) {
+      setHeight(frameRef.current.offsetHeight);
+      setWidth(frameRef.current.offsetWidth);
+    }
+    setBaseGalleryTransition("none");
+  }, [router.asPath]);
+
+  useEffect(() => {
+    setImagesContainerWidth(3 * width);
+  }, [width]);
+
+  useEffect(() => {
+    if (baseGalleryTransition === "none") {
+      galleryItem && setAllImagesToSame(galleryItem);
+    }
+  }, [baseGalleryTransition, galleryItem]);
+
+  useEffect(() => {
+    if (images.rightImageSrc === images.centerImageSrc) {
+      if (imagesContainerTranslateX !== -width) {
+        setImagesContainerTranslateX(-width);
+        return;
+      }
+      if (
+        imagesContainerTranslateX === -width &&
+        slideRef.current?.clientWidth !== 0
+      ) {
+        galleryItem && setAllImagesToFinal(galleryItem);
+      }
+    }
+
+    if (
+      images.rightImageSrc !== images.centerImageSrc &&
+      imagesContainerTranslateX === -width
+    ) {
+      setBaseGalleryTransition(BASE_GALLERY_TRANSITION);
+    }
+  }, [
+    images,
+    imagesContainerTranslateX,
+    galleryItem,
+    width,
+    baseGalleryTransition,
+  ]);
 
   return (
     <>
@@ -69,21 +181,27 @@ export default function GalleryItem({ galleryItem }: props) {
           {galleryItem && (
             <>
               {galleryItem.previous && (
-                <Link
-                  onClick={() => setSlideDirection("left")}
-                  href={`/gallery/${getGalleryUrlStringFromTitle(
-                    galleryItem.previous.title
-                  )}`}
+                // <Link
+                //   onClick={() => setSlideDirection("left")}
+                //   href={`/gallery/${getGalleryUrlStringFromTitle(
+                //     galleryItem.previous.title
+                //   )}`}
+                // >
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // setSlideDirection("left");
+                    doSlideAnimationThenChangeRoutes("left", slideRef);
+                  }}
                 >
                   <div className={`${styles.arrow} ${styles.left}`}>
                     <div
                       className={`${styles.innerArrow} ${styles.left}`}
                     ></div>
                   </div>
-                </Link>
+                </a>
+                // </Link>
               )}
-              {/** @TODO: You are trying to animate translateX from "1000" to "0". 1000 is not an animatable value -
-               * to enable this animation set 1000 to a value animatable to 0 via the `style` property. */}
               {/* <AnimatePresence>
                 <motion.div
                   key={galleryItem.title}
@@ -104,61 +222,134 @@ export default function GalleryItem({ galleryItem }: props) {
                   }}
                   className={styles.imageContainer}
                 > */}
-              <div ref={ref} className={styles.imageFrame}>
+              <div ref={frameRef} className={styles.imageFrame}>
                 <div
+                  ref={slideRef}
                   className={styles.imagesContainer}
                   style={{
                     width: `${imagesContainerWidth}px`,
-                    transform: `translateX(-${imagesContainerTranslateX}px)`,
+                    transform: `translateX(${imagesContainerTranslateX}px)`,
+                    transition: baseGalleryTransition,
                   }}
                 >
+                  {/* <AnimatePresence>
+                  <motion.div
+                    ref={slideRef}
+                    className={styles.imagesContainer}
+                    style={{
+                      width: `${imagesContainerWidth}px`,
+                      // transform: `translateX(-${imagesContainerTranslateX}px)`,
+                      left: `-${imagesContainerTranslateX}px`,
+                    }}
+                    key={galleryItem.title}
+                    // initial
+                    // initial={false}
+                    transition={{ ease: "easeOut", duration: 5 }}
+                    // animate={{
+                    //   transform: `translateX(-${imagesContainerTranslateX}px)`,
+                    // }}
+                    // initial={{
+                    //   transform: `translateX(-${imagesContainerTranslateX}px)`,
+                    // }}
+                    // animate={
+                    //   {
+                    //     // left: `-${imagesContainerTranslateX}px`
+                    //     // transform: `translateX(-${imagesContainerTranslateX}px)`,
+                    //   }
+                    // }
+                    exit={{
+                      // left: ["-100px", "-500px"],
+                      left: [
+                        `-${imagesContainerTranslateX}px`,
+                        `${width}px`,
+                        // `${slideDirection === "left" ? "" : "-"}${width}px)`,
+                      ],
+                      // transform: `translateX(${
+                      //   slideDirection === "left" ? " " : "-"
+                      // }${width}px)`,
+                    }}
+                    // exit={{
+                    //   transform: [
+                    //     `translateX(-${imagesContainerTranslateX}px)`,
+                    //     `translateX(${
+                    //       slideDirection === "left" ? " " : "-"
+                    //     }${width}px)`,
+                    //   ],
+                    // }}
+                    // exit={{
+                    //   transform: [
+                    //     `translateX(-${imagesContainerTranslateX}px)`,
+                    //     `translateX(${
+                    //       slideDirection === "left" ? " " : "-"
+                    //     }${width}px)`,
+                    //   ],
+                    // }}
+                  > */}
                   {galleryItem.previous && (
                     <Image
-                      src={`${getApiUrlBase()}${
-                        galleryItem.previous.image.url
-                      }`}
+                      // src={`${getApiUrlBase()}${
+                      //   galleryItem.previous.image.url
+                      // }`}
+                      src={images.leftImageSrc}
                       alt=""
                       width={width}
                       height={height}
+                      // style={{ objectFit: "contain", left: -width }}
                       style={{ objectFit: "contain" }}
+                      priority
                     />
                   )}
                   <Image
-                    src={`${getApiUrlBase()}${
-                      galleryItem.image.data.attributes.url
-                    }`}
+                    // src={`${getApiUrlBase()}${
+                    //   galleryItem.image.data.attributes.url
+                    // }`}
+                    src={images.centerImageSrc}
                     alt=""
                     width={width}
                     height={height}
+                    // style={{ objectFit: "contain", left: 0 }}
                     style={{ objectFit: "contain" }}
+                    priority
                   />
                   {galleryItem.next && (
                     <Image
-                      src={`${getApiUrlBase()}${galleryItem.next.image.url}`}
+                      // src={`${getApiUrlBase()}${galleryItem.next.image.url}`}
+                      src={images.rightImageSrc}
                       alt=""
                       width={width}
                       height={height}
+                      // style={{ objectFit: "contain", left: width }}
                       style={{ objectFit: "contain" }}
+                      priority
                     />
                   )}
+                  {/* </motion.div>
+                </AnimatePresence> */}
                 </div>
               </div>
-              {/* </motion.div>
-              </AnimatePresence> */}
+              {/* </motion.div> */}
 
               {galleryItem.next && (
-                <Link
-                  onClick={() => setSlideDirection("right")}
-                  href={`/gallery/${getGalleryUrlStringFromTitle(
-                    galleryItem.next.title
-                  )}`}
+                // <Link
+                //   onClick={() => setSlideDirection("right")}
+                //   href={`/gallery/${getGalleryUrlStringFromTitle(
+                //     galleryItem.next.title
+                //   )}`}
+                // >
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // setSlideDirection("left");
+                    doSlideAnimationThenChangeRoutes("right", slideRef);
+                  }}
                 >
                   <div className={`${styles.arrow} ${styles.right}`}>
                     <div
                       className={`${styles.innerArrow} ${styles.right}`}
                     ></div>
                   </div>
-                </Link>
+                </a>
+                // </Link>
               )}
             </>
           )}
@@ -191,7 +382,7 @@ export const getStaticProps: GetStaticProps = async (
   ).catch((e) => {});
   if (res && res.ok) {
     const json = await res.json();
-    debugger;
+    // debugger;
     return { props: { galleryItem: json.data[0].attributes } };
   } else {
     return { props: { galleryItem: null } };
