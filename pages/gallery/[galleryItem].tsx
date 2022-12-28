@@ -15,7 +15,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ScrollGallery from "components/ScrollGallery";
 import Overlay from "components/overlay";
 import { RefObject, useCallback, useEffect, useRef, useState } from "react";
-import { time } from "console";
+import useEscGoesToRoute from "hooks/useEscGoesToRoute";
 
 interface props {
   galleryItem: IGalleryItem["attributes"] | null;
@@ -102,22 +102,7 @@ export default function GalleryItem({ galleryItem }: props) {
     setImagesContainerTranslateX(direction === "left" ? 0 : -2 * width);
   };
 
-  const escFunction = useCallback(
-    (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        router.push("/gallery");
-      }
-    },
-    [router]
-  );
-
-  useEffect(() => {
-    document.addEventListener("keydown", escFunction, false);
-
-    return () => {
-      document.removeEventListener("keydown", escFunction, false);
-    };
-  }, [escFunction]);
+  useEscGoesToRoute("/gallery");
 
   useEffect(() => {
     if (frameRef.current !== null) {
