@@ -36,14 +36,39 @@ export default function GalleryItem({ galleryItem }: props) {
   const BASE_GALLERY_TRANSITION = "transform 1s ease-in-out";
   const [baseGalleryTransition, setBaseGalleryTransition] = useState("none");
 
-  const [images, setImages] = useState({
-    leftImageSrc:
-      `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}` || "",
-    centerImageSrc:
-      `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}` || "",
-    rightImageSrc:
-      `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}` || "",
-  });
+  const getSameImagesState = (
+    galleryItem: IGalleryItem["attributes"] | null
+  ) => {
+    return {
+      leftImageSrc: galleryItem?.image.data.attributes.url
+        ? `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}`
+        : "",
+      centerImageSrc: galleryItem?.image.data.attributes.url
+        ? `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}`
+        : "",
+      rightImageSrc: galleryItem?.image.data.attributes.url
+        ? `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}`
+        : "",
+    };
+  };
+
+  const getFinalImagesState = (
+    galleryItem: IGalleryItem["attributes"] | null
+  ) => {
+    return {
+      leftImageSrc: galleryItem?.previous?.image.url
+        ? `${getApiUrlBase()}${galleryItem?.previous?.image.url}`
+        : "",
+      centerImageSrc: galleryItem?.image.data.attributes.url
+        ? `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}`
+        : "",
+      rightImageSrc: galleryItem?.next?.image.url
+        ? `${getApiUrlBase()}${galleryItem?.next?.image.url}`
+        : "",
+    };
+  };
+
+  const [images, setImages] = useState(getSameImagesState(galleryItem));
 
   const getNextOrPreviousUrl = (direction: "left" | "right") => {
     if (
@@ -90,30 +115,6 @@ export default function GalleryItem({ galleryItem }: props) {
     [router]
   );
 
-  const setAllImagesToSame = (galleryItem: IGalleryItem["attributes"]) => {
-    setImages({
-      leftImageSrc: `${getApiUrlBase()}${
-        galleryItem?.image.data.attributes.url
-      }`,
-      rightImageSrc: `${getApiUrlBase()}${
-        galleryItem?.image.data.attributes.url
-      }`,
-      centerImageSrc: `${getApiUrlBase()}${
-        galleryItem?.image.data.attributes.url
-      }`,
-    });
-  };
-
-  const setAllImagesToFinal = (galleryItem: IGalleryItem["attributes"]) => {
-    setImages({
-      leftImageSrc: `${getApiUrlBase()}${galleryItem?.previous?.image.url}`,
-      centerImageSrc: `${getApiUrlBase()}${
-        galleryItem?.image.data.attributes.url
-      }`,
-      rightImageSrc: `${getApiUrlBase()}${galleryItem?.next?.image.url}`,
-    });
-  };
-
   useEffect(() => {
     document.addEventListener("keydown", escFunction, false);
 
@@ -136,7 +137,7 @@ export default function GalleryItem({ galleryItem }: props) {
 
   useEffect(() => {
     if (baseGalleryTransition === "none") {
-      galleryItem && setAllImagesToSame(galleryItem);
+      galleryItem && setImages(getSameImagesState(galleryItem));
     }
   }, [baseGalleryTransition, galleryItem]);
 
@@ -150,7 +151,7 @@ export default function GalleryItem({ galleryItem }: props) {
         imagesContainerTranslateX === -width &&
         slideRef.current?.clientWidth !== 0
       ) {
-        galleryItem && setAllImagesToFinal(galleryItem);
+        galleryItem && setImages(getFinalImagesState(galleryItem));
       }
     }
 
@@ -190,7 +191,6 @@ export default function GalleryItem({ galleryItem }: props) {
                 <a
                   onClick={(e) => {
                     e.preventDefault();
-                    // setSlideDirection("left");
                     doSlideAnimationThenChangeRoutes("left", slideRef);
                   }}
                 >
@@ -202,26 +202,6 @@ export default function GalleryItem({ galleryItem }: props) {
                 </a>
                 // </Link>
               )}
-              {/* <AnimatePresence>
-                <motion.div
-                  key={galleryItem.title}
-                  initial={{
-                    translateX: `${
-                      !slideDirection
-                        ? "0"
-                        : slideDirection === "left"
-                        ? "-"
-                        : ""
-                    }1000px`,
-                  }}
-                  animate={{ translateX: "0" }}
-                  exit={{
-                    translateX: `${
-                      slideDirection === "left" ? " " : "-"
-                    }1000px`,
-                  }}
-                  className={styles.imageContainer}
-                > */}
               <div ref={frameRef} className={styles.imageFrame}>
                 <div
                   ref={slideRef}
@@ -236,93 +216,33 @@ export default function GalleryItem({ galleryItem }: props) {
                   <motion.div
                     ref={slideRef}
                     className={styles.imagesContainer}
-                    style={{
-                      width: `${imagesContainerWidth}px`,
-                      // transform: `translateX(-${imagesContainerTranslateX}px)`,
-                      left: `-${imagesContainerTranslateX}px`,
-                    }}
                     key={galleryItem.title}
-                    // initial
-                    // initial={false}
-                    transition={{ ease: "easeOut", duration: 5 }}
-                    // animate={{
-                    //   transform: `translateX(-${imagesContainerTranslateX}px)`,
-                    // }}
-                    // initial={{
-                    //   transform: `translateX(-${imagesContainerTranslateX}px)`,
-                    // }}
-                    // animate={
-                    //   {
-                    //     // left: `-${imagesContainerTranslateX}px`
-                    //     // transform: `translateX(-${imagesContainerTranslateX}px)`,
-                    //   }
-                    // }
-                    exit={{
-                      // left: ["-100px", "-500px"],
-                      left: [
-                        `-${imagesContainerTranslateX}px`,
-                        `${width}px`,
-                        // `${slideDirection === "left" ? "" : "-"}${width}px)`,
-                      ],
-                      // transform: `translateX(${
-                      //   slideDirection === "left" ? " " : "-"
-                      // }${width}px)`,
-                    }}
-                    // exit={{
-                    //   transform: [
-                    //     `translateX(-${imagesContainerTranslateX}px)`,
-                    //     `translateX(${
-                    //       slideDirection === "left" ? " " : "-"
-                    //     }${width}px)`,
-                    //   ],
-                    // }}
-                    // exit={{
-                    //   transform: [
-                    //     `translateX(-${imagesContainerTranslateX}px)`,
-                    //     `translateX(${
-                    //       slideDirection === "left" ? " " : "-"
-                    //     }${width}px)`,
-                    //   ],
-                    // }}
                   > */}
-                  {galleryItem.previous && (
-                    <Image
-                      // src={`${getApiUrlBase()}${
-                      //   galleryItem.previous.image.url
-                      // }`}
-                      src={images.leftImageSrc}
-                      alt=""
-                      width={width}
-                      height={height}
-                      // style={{ objectFit: "contain", left: -width }}
-                      style={{ objectFit: "contain" }}
-                      priority
-                    />
-                  )}
                   <Image
-                    // src={`${getApiUrlBase()}${
-                    //   galleryItem.image.data.attributes.url
-                    // }`}
+                    src={images.leftImageSrc}
+                    alt=""
+                    width={width}
+                    height={height}
+                    style={{ objectFit: "contain" }}
+                    priority
+                  />
+                  <Image
                     src={images.centerImageSrc}
                     alt=""
                     width={width}
                     height={height}
-                    // style={{ objectFit: "contain", left: 0 }}
                     style={{ objectFit: "contain" }}
                     priority
                   />
-                  {galleryItem.next && (
-                    <Image
-                      // src={`${getApiUrlBase()}${galleryItem.next.image.url}`}
-                      src={images.rightImageSrc}
-                      alt=""
-                      width={width}
-                      height={height}
-                      // style={{ objectFit: "contain", left: width }}
-                      style={{ objectFit: "contain" }}
-                      priority
-                    />
-                  )}
+                  <Image
+                    src={images.rightImageSrc}
+                    alt=""
+                    width={width}
+                    height={height}
+                    style={{ objectFit: "contain" }}
+                    priority
+                  />
+                  {/* )} */}
                   {/* </motion.div>
                 </AnimatePresence> */}
                 </div>
@@ -339,7 +259,6 @@ export default function GalleryItem({ galleryItem }: props) {
                 <a
                   onClick={(e) => {
                     e.preventDefault();
-                    // setSlideDirection("left");
                     doSlideAnimationThenChangeRoutes("right", slideRef);
                   }}
                 >
