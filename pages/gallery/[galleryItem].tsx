@@ -39,31 +39,27 @@ export default function GalleryItem({ galleryItem }: props) {
   const getSameImagesState = (
     galleryItem: IGalleryItem["attributes"] | null
   ) => {
+    const urlPath = galleryItem?.image?.data?.attributes?.url;
+    const url = urlPath ? `${getApiUrlBase()}${urlPath}` : "";
     return {
-      leftImageSrc: galleryItem?.image.data.attributes.url
-        ? `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}`
-        : "",
-      centerImageSrc: galleryItem?.image.data.attributes.url
-        ? `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}`
-        : "",
-      rightImageSrc: galleryItem?.image.data.attributes.url
-        ? `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}`
-        : "",
+      leftImageSrc: url,
+      centerImageSrc: url,
+      rightImageSrc: url,
     };
   };
 
   const getFinalImagesState = (
-    galleryItem: IGalleryItem["attributes"] | null
+    galleryItem: IGalleryItem["attributes"] | null | undefined
   ) => {
     return {
-      leftImageSrc: galleryItem?.previous?.image.url
+      leftImageSrc: galleryItem?.previous?.image?.url
         ? `${getApiUrlBase()}${galleryItem?.previous?.image.url}`
         : "",
-      centerImageSrc: galleryItem?.image.data.attributes.url
-        ? `${getApiUrlBase()}${galleryItem?.image.data.attributes.url}`
+      centerImageSrc: galleryItem?.image?.data?.attributes?.url
+        ? `${getApiUrlBase()}${galleryItem?.image?.data?.attributes?.url}`
         : "",
-      rightImageSrc: galleryItem?.next?.image.url
-        ? `${getApiUrlBase()}${galleryItem?.next?.image.url}`
+      rightImageSrc: galleryItem?.next?.image?.url
+        ? `${getApiUrlBase()}${galleryItem?.next?.image?.url}`
         : "",
     };
   };
@@ -142,6 +138,9 @@ export default function GalleryItem({ galleryItem }: props) {
   }, [baseGalleryTransition, galleryItem]);
 
   useEffect(() => {
+    if (!images) {
+      return;
+    }
     if (images.rightImageSrc === images.centerImageSrc) {
       if (imagesContainerTranslateX !== -width) {
         setImagesContainerTranslateX(-width);
@@ -219,7 +218,7 @@ export default function GalleryItem({ galleryItem }: props) {
                     key={galleryItem.title}
                   > */}
                   <Image
-                    src={images.leftImageSrc}
+                    src={images?.leftImageSrc || ""}
                     alt=""
                     width={width}
                     height={height}
@@ -227,7 +226,7 @@ export default function GalleryItem({ galleryItem }: props) {
                     priority
                   />
                   <Image
-                    src={images.centerImageSrc}
+                    src={images?.centerImageSrc || ""}
                     alt=""
                     width={width}
                     height={height}
@@ -235,7 +234,7 @@ export default function GalleryItem({ galleryItem }: props) {
                     priority
                   />
                   <Image
-                    src={images.rightImageSrc}
+                    src={images?.rightImageSrc || ""}
                     alt=""
                     width={width}
                     height={height}
