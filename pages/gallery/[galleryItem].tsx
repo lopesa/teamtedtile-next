@@ -104,6 +104,9 @@ export default function GalleryItem({ galleryItem }: props) {
 
   useEscGoesToRoute("/gallery");
 
+  // on route change of initial instantiation, set the height/width of the frame
+  // on further route changes, set the transition to none to start the sequence of
+  // setBaseGalleryTransition("none") -> setImages(getSameImagesState(galleryItem)) -> setImagesContainerTranslateX(-width);
   useEffect(() => {
     if (frameRef.current !== null) {
       setHeight(frameRef.current.offsetHeight);
@@ -112,10 +115,12 @@ export default function GalleryItem({ galleryItem }: props) {
     setBaseGalleryTransition("none");
   }, [router.asPath]);
 
+  // listens to width and sets initial slide width on instantiation
   useEffect(() => {
     setImagesContainerWidth(3 * width);
   }, [width]);
 
+  // prepare slide to reset position
   useEffect(() => {
     if (baseGalleryTransition === "none") {
       galleryItem && setImages(getSameImagesState(galleryItem));
