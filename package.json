@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "dev": "NODE_OPTIONS='--inspect=localhost:9235' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -14,8 +14,10 @@
     "@types/react-dom": "18.0.9",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
+    "form-data": "^4.0.0",
     "framer-motion": "^7.10.0",
     "justified-layout": "^4.1.0",
+    "mailgun.js": "^8.0.6",
     "next": "13.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",

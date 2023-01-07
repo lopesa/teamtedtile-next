@@ -54,9 +54,9 @@ export const getStaticProps: GetStaticProps = async (): Promise<{
   props: HomeGalleryProps;
 }> => {
   // https://developer.mozilla.org/en-US/docs/Web/API/fetch
-  const res = await fetch(
-    `${getApiUrlBase()}/api/gallery-images?populate=*`
-  ).catch((e) => {});
+  const res = await fetch(`${getApiUrlBase()}/api/gallery-images`).catch(
+    (e) => {}
+  );
   if (res && res.ok) {
     const json: IGalleryItemsResponse = await res.json();
     return { props: { images: json.data, notFound: false } };
