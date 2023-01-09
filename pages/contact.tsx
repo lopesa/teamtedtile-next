@@ -50,11 +50,11 @@ export default function Contact() {
             />
             <button type="submit">SEND</button>
           </form>
-          <div className="toast-holder">
-            <div className="toast">
+          <div className={styles.toastHolder}>
+            <div className={styles.toast}>
               <p></p>
-              <div className="button-row">
-                <div className="button">&times;</div>
+              <div className={styles.buttonRow}>
+                <div className={styles.button}>&times;</div>
               </div>
             </div>
           </div>

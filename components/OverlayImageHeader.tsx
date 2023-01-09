@@ -24,6 +24,7 @@ export default function OverlayImageHeader({
         backgroundImage: `url(${backgroundImage})`,
         backgroundPosition: backgroundPosition,
         backgroundSize: backgroundSize,
+        flexShrink: 0,
         ...props.style,
       }}
     >

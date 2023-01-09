@@ -46,7 +46,6 @@ export default function About({ copy, bodyImages }: IAboutProps) {
             backgroundSize="cover"
             copyright="Ruth Hyndman Design"
             title="about"
-            style={{ flexShrink: 0 }}
           />
           <div className={`overlay-body ${styles.aboutContainer}`}>
             {copyAsArray.length &&
