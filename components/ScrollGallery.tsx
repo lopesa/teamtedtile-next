@@ -7,6 +7,8 @@ import useWindowSize from "hooks/useWindowSize";
 import { useEffect, useState, forwardRef, Ref } from "react";
 import { BREAKPOINTS } from "enums/Breakpoints";
 import ScrollGalleryImage from "./ScrollGalleryimage";
+import { getGalleryUrlStringFromTitle } from "utils";
+import Link from "next/link";
 
 enum GALLERY_WIDTHS {
   MOBILE = 325,
@@ -14,6 +16,7 @@ enum GALLERY_WIDTHS {
   TABLET_SMALL = 600,
   TABLET = 768,
   DESKTOP = 1060,
+  DESKTOP_LARGE = 1200,
 }
 
 interface ScrollGalleryProps {
@@ -41,7 +44,9 @@ const ScrollGallery = forwardRef(function ScrollGallery(
   };
 
   const getGalleryWidth = (windowWidth: number) => {
-    if (windowWidth > BREAKPOINTS.LARGE) {
+    if (windowWidth > BREAKPOINTS.XLARGE) {
+      return GALLERY_WIDTHS.DESKTOP_LARGE;
+    } else if (windowWidth > BREAKPOINTS.LARGE) {
       return GALLERY_WIDTHS.DESKTOP;
     } else if (windowWidth > BREAKPOINTS.MEDIUM) {
       return GALLERY_WIDTHS.TABLET;
@@ -120,7 +125,10 @@ const ScrollGallery = forwardRef(function ScrollGallery(
           </div>
           {galleryLayoutInfo?.layoutGeometry.boxes.length &&
             galleryLayoutInfo?.layoutGeometry.boxes.map((box, index) => (
-              <div
+              <Link
+                href={`gallery/${getGalleryUrlStringFromTitle(
+                  images[index].attributes.title
+                )}`}
                 key={index}
                 style={{
                   transform: `translate(${box.left}px, ${box.top}px)`,
@@ -130,7 +138,7 @@ const ScrollGallery = forwardRef(function ScrollGallery(
                 }}
               >
                 <ScrollGalleryImage image={images[index]} />
-              </div>
+              </Link>
             ))}
         </div>
       )}

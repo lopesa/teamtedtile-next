@@ -4,6 +4,7 @@ import { getApiUrlBase, getGalleryUrlStringFromTitle } from "utils";
 import Image from "next/image";
 import styles from "styles/ScrollGalleryImage.module.scss";
 import tedHeadImg from "public/images/ted_calvert_icon.png";
+import StrapiImage from "./StrapiImage";
 
 interface ScrollGalleryImageProps {
   image: IGalleryItem;
@@ -11,13 +12,12 @@ interface ScrollGalleryImageProps {
 
 const ScrollGalleryImage = ({ image }: ScrollGalleryImageProps) => {
   return (
-    <Link
-      href={`gallery/${getGalleryUrlStringFromTitle(image.attributes.title)}`}
-    >
-      <Image
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <StrapiImage
         src={`${getApiUrlBase()}${image.attributes.image.data.attributes.url}`}
         alt={`${image.attributes.image.data.attributes.alternativeText}`}
         fill={true}
+        sizes="(max-width: 1100px) 100vw, 600px"
       />
       {image.attributes.copyright && (
         <div className="copyright">{image.attributes.copyright}</div>
@@ -35,7 +35,7 @@ const ScrollGalleryImage = ({ image }: ScrollGalleryImageProps) => {
           </div>
         </div>
       )}
-    </Link>
+    </div>
   );
 };
 
