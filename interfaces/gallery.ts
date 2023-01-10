@@ -26,7 +26,8 @@ export interface IGalleryItem {
       };
     };
     copyright?: string;
-    tedheadText?: string;
+    // tedheadText?: string;
+    tedHeadTextRich?: string;
     /**
      * @TODO
      * previous and next are just a hack to keep moving
@@ -36,7 +37,7 @@ export interface IGalleryItem {
      */
     previous: {
       copyright?: string;
-      tedheadText?: string;
+      tedHeadTextRich?: string;
       title: string;
       image: {
         name: string;
@@ -48,7 +49,7 @@ export interface IGalleryItem {
     } | null;
     next: {
       copyright?: string;
-      tedheadText?: string;
+      tedHeadTextRich?: string;
       title: string;
       image: {
         name: string;

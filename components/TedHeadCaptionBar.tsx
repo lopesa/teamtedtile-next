@@ -3,6 +3,8 @@ import Image from "next/image";
 import tedHeadImg from "public/images/ted_calvert_icon.png";
 import { useRef, MouseEvent, useState } from "react";
 import { removeListener } from "process";
+import ReactMarkdown from "react-markdown";
+import rehypeExternalLinks from "rehype-external-links";
 
 interface TedHeadCaptionBarProps {
   tedHeadText: string;
@@ -83,7 +85,13 @@ function TedHeadCaptionBar({ tedHeadText }: TedHeadCaptionBarProps) {
       </div>
       <div className={styles.tedHeadTextHolder}>
         <div ref={tedHeadTextDiv} className={styles.tedHeadText}>
-          {tedHeadText}
+          <ReactMarkdown
+            rehypePlugins={[
+              [rehypeExternalLinks, { rel: "nofollow", target: "_blank" }],
+            ]}
+          >
+            {tedHeadText}
+          </ReactMarkdown>
           <span onClick={handleClose}>&times;</span>
         </div>
       </div>

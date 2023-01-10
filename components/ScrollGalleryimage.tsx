@@ -11,6 +11,9 @@ interface ScrollGalleryImageProps {
 const ScrollGalleryImage = ({ image }: ScrollGalleryImageProps) => {
   return (
     <div
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
       className={styles.scrollGalleryImageContainer}
       style={{ position: "relative", width: "100%", height: "100%" }}
     >
@@ -23,8 +26,8 @@ const ScrollGalleryImage = ({ image }: ScrollGalleryImageProps) => {
       {image.attributes.copyright && (
         <div className="copyright">{image.attributes.copyright}</div>
       )}
-      {image.attributes.tedheadText && (
-        <TedHeadCaptionBar tedHeadText={image.attributes.tedheadText} />
+      {image.attributes.tedHeadTextRich && (
+        <TedHeadCaptionBar tedHeadText={image.attributes.tedHeadTextRich} />
       )}
     </div>
   );

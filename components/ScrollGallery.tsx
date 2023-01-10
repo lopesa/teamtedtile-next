@@ -146,5 +146,4 @@ const ScrollGallery = forwardRef(function ScrollGallery(
   );
 });
 
-// export default forwardRef(ScrollGallery);
 export default ScrollGallery;
