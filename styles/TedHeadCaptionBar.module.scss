@@ -1,0 +1,113 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+
+.tedHeadTextCaption {
+  transition: all 0.2s ease-in-out;
+
+  // to get it above the copyright
+  z-index: 51;
+
+  width: 100%;
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  display: none;
+
+  @media screen and (min-width: $phone-ipad) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.active {
+    height: 90px;
+  }
+  .tedHead {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    flex-shrink: 0;
+
+    width: 100px;
+    height: 100%;
+
+    padding: 0 10px;
+
+    transition: all 0.2s ease-in-out;
+
+    &.animateLeft {
+      transform: rotate(-20deg);
+    }
+
+    &.animateRight {
+      transform: rotate(10deg);
+    }
+
+    img {
+      width: 90%;
+      height: auto;
+
+      transition: all 0.2s ease-in-out;
+
+      &.active {
+        width: 100%;
+      }
+
+      &.animateLeft {
+        transform: rotate(-20deg);
+      }
+
+      &.animateRight {
+        transform: rotate(10deg);
+      }
+    }
+  }
+
+  .tedHeadTextHolder {
+    flex-grow: 1;
+    overflow: hidden;
+
+    .tedHeadText {
+      transition: all 0.5s ease-in-out;
+
+      width: fit-content;
+      margin-left: -300%;
+      overflow: hidden;
+
+      background-color: $blue-new;
+      color: $white;
+      padding: 5px 10px 5px 20px;
+
+      a {
+        color: $dark-warm-grey-70;
+        transition: all 0.15s ease-in-out;
+        display: inline;
+
+        &:hover {
+          color: $yellow;
+        }
+      }
+
+      @include proxima-nova;
+      font-size: 1.6em;
+
+      letter-spacing: 0.03em;
+
+      span {
+        margin-left: 10px;
+        font-size: 1.2em;
+
+        &:hover {
+          color: $warm-grey;
+        }
+      }
+
+      &.active {
+        margin-left: 1%;
+      }
+    }
+  }
+}
