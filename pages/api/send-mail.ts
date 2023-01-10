@@ -16,34 +16,38 @@ export default async function handler(
     return;
   }
 
-  const mailgun = new Mailgun(formData);
-  const mg = mailgun.client({
-    username: "api",
-    key: MAILGUN_API_KEY,
-  });
+  const parsedBody = JSON.parse(req.body);
+  debugger;
+  return;
 
-  const response = await mg.messages
-    .create(MAILGUN_DOMAIN, {
-      from: MAILGUN_EMAIL_SENDER,
-      to: MAILGUN_EMAIL_RECEIVER,
+  // const mailgun = new Mailgun(formData);
+  // const mg = mailgun.client({
+  //   username: "api",
+  //   key: MAILGUN_API_KEY,
+  // });
 
-      //Subject and text data
-      subject: "An inquiry from teamtedtile.com",
-      html:
-        "from email: " +
-        req.body.email +
-        "<br>" +
-        "from phone number: " +
-        req.body.tel +
-        "<br>" +
-        "message: " +
-        req.body.message,
-    })
-    .catch((e) => {
-      console.log(e);
-      res.status(500).json(new Error("Problem connecting with Mailgun"));
-    });
+  // const response = await mg.messages
+  //   .create(MAILGUN_DOMAIN, {
+  //     from: MAILGUN_EMAIL_SENDER,
+  //     to: MAILGUN_EMAIL_RECEIVER,
 
-  // @TODO - "fail" case
-  res.status(200).json("success");
+  //     //Subject and text data
+  //     subject: "An inquiry from teamtedtile.com",
+  //     html:
+  //       "from email: " +
+  //       req.body.email +
+  //       "<br>" +
+  //       "from phone number: " +
+  //       req.body.tel +
+  //       "<br>" +
+  //       "message: " +
+  //       req.body.message,
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //     res.status(500).json(new Error("Problem connecting with Mailgun"));
+  //   });
+
+  // // @TODO - "fail" case
+  // res.status(200).json("success");
 }
