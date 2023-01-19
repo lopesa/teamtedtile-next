@@ -33,8 +33,10 @@ export default function GalleryItem({ galleryItem }: props) {
   const [imagesContainerWidth, setImagesContainerWidth] = useState(0);
   const [imagesContainerTranslateX, setImagesContainerTranslateX] = useState(0);
 
-  const BASE_GALLERY_TRANSITION = "transform 1s ease-in-out";
+  const BASE_GALLERY_TRANSITION = "transform 0.5s ease-in-out";
   const [baseGalleryTransition, setBaseGalleryTransition] = useState("none");
+
+  const [isPopState, setIsPopState] = useState(false);
 
   const getSameImagesState = (
     galleryItem: IGalleryItem["attributes"] | null
@@ -125,7 +127,26 @@ export default function GalleryItem({ galleryItem }: props) {
     if (baseGalleryTransition === "none") {
       galleryItem && setImages(getSameImagesState(galleryItem));
     }
-  }, [baseGalleryTransition, galleryItem]);
+  }, [baseGalleryTransition, galleryItem, isPopState]);
+
+  useEffect(() => {
+    const handleRouteChangeComplete = () => {
+      if (isPopState) {
+        router.reload();
+      }
+      setIsPopState(false);
+    };
+    router.events.on("routeChangeComplete", handleRouteChangeComplete);
+
+    router.beforePopState(() => {
+      setIsPopState(true);
+      return true;
+    });
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChangeComplete);
+    };
+  }, [router, isPopState]);
 
   useEffect(() => {
     if (!images) {
@@ -290,7 +311,6 @@ export const getStaticProps: GetStaticProps = async (
   ).catch((e) => {});
   if (res && res.ok) {
     const json = await res.json();
-    // debugger;
     return { props: { galleryItem: json.data[0].attributes } };
   } else {
     return { props: { galleryItem: null } };
