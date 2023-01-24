@@ -5,7 +5,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: inherit;
+  width: 100%;
 
   position: fixed;
   z-index: 55;
@@ -14,6 +14,19 @@
   @include baseTransition;
 
   padding-left: 10px;
+
+  &.scrolled {
+    background-color: $mid-warm-grey-85;
+
+    .category {
+      color: $white;
+      &.active,
+      &:hover {
+        background-color: $white;
+        color: $mid-grey;
+      }
+    }
+  }
 
   ul {
     display: flex;

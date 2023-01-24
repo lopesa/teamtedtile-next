@@ -2,11 +2,10 @@ import { GetStaticProps } from "next";
 import Head from "next/head";
 import HomeSplash from "components/homeSplash";
 import Menu from "components/menu";
-// import ScrollGallery from "../../components/ScrollGallery";
 import ScrollGallery from "components/ScrollGallery";
 import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
 import { getApiUrlBase } from "utils";
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useRef, useState } from "react";
 
 /**
  * this page and the index are duped code mostly but I am seeing that
@@ -26,6 +25,7 @@ export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
   ) => {
     scrollGalleryRefPass?.current?.scrollIntoView({ behavior: "smooth" });
   };
+  const [menuScrolledPast, setMenuScrolledPast] = useState(false);
   return (
     <>
       <Head>
@@ -34,9 +34,9 @@ export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Menu />
+      <Menu menuScrolledPast={menuScrolledPast} />
       <main>
-        <HomeSplash />
+        <HomeSplash setIsScrolledPastHomeSplash={setMenuScrolledPast} />
         <ScrollGallery
           ref={scrollGalleryRef}
           images={images}

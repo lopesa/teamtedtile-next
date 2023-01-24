@@ -1,11 +1,11 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import HomeSplash from "components/homeSplash";
-// import ScrollGallery from "components/ScrollGallery";
 import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
 import { getApiUrlBase } from "utils";
 import Menu from "components/menu";
 import ScrollGallery from "components/ScrollGallery";
+import { useState } from "react";
 
 /**
  * this page and the gallery are duped code (getStaticProps) but I am seeing that
@@ -20,6 +20,7 @@ export default function Home({
   images: IGalleryItem[];
   notFound: boolean;
 }) {
+  const [menuScrolledPast, setMenuScrolledPast] = useState(false);
   return (
     <>
       <Head>
@@ -28,9 +29,9 @@ export default function Home({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Menu />
+      <Menu menuScrolledPast={menuScrolledPast} />
       <main>
-        <HomeSplash />
+        <HomeSplash setIsScrolledPastHomeSplash={setMenuScrolledPast} />
         <ScrollGallery images={images} notFound={notFound} />
       </main>
     </>

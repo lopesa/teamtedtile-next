@@ -5,14 +5,18 @@ import ActiveLink from "./activeLink";
 
 type MenuProps = {
   backgroundColor?: string;
+  menuScrolledPast: boolean;
 };
 
 export default function Menu({
   backgroundColor,
+  menuScrolledPast,
 }: PropsWithChildren<MenuProps>) {
   return (
     <nav
-      className={styles.menuContainer}
+      className={`${styles.menuContainer} ${
+        menuScrolledPast ? styles.scrolled : ""
+      }`}
       style={{ backgroundColor: backgroundColor }}
     >
       <ul>
