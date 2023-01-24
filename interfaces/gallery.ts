@@ -26,7 +26,6 @@ export interface IGalleryItem {
       };
     };
     copyright?: string;
-    // tedheadText?: string;
     tedHeadTextRich?: string;
     /**
      * @TODO

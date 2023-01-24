@@ -6,6 +6,7 @@ import ScrollGallery from "components/ScrollGallery";
 import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
 import { getApiUrlBase } from "utils";
 import { RefObject, useRef, useState } from "react";
+import BusinessCard from "components/BusinessCard";
 
 /**
  * this page and the index are duped code mostly but I am seeing that
@@ -45,6 +46,7 @@ export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
             scrollGalleryRefIntoView.bind(HomeGallery, scrollGalleryRef),
           ]}
         />
+        <BusinessCard />
       </main>
     </>
   );

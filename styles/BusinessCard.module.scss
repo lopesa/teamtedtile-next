@@ -1,0 +1,105 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+
+.businessCard {
+  .cardContainer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 300px;
+    margin: 180px auto 50px;
+
+    .imageHolder {
+      position: relative;
+      flex-shrink: 0;
+      width: 150px;
+      height: 150px;
+    }
+
+    .logoHolder {
+      height: 100%;
+      width: auto;
+    }
+
+    img {
+      height: 100%;
+      width: auto;
+    }
+
+    .copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      height: 150px;
+      margin-left: 10px;
+      padding: 10px 0;
+      font-size: 1.4em;
+      color: $dark-warm-grey;
+
+      a {
+        color: $dark-warm-grey;
+
+        &:hover {
+          color: $warm-grey;
+        }
+      }
+
+      .head {
+        line-height: 1em;
+      }
+
+      .ital {
+        @include proxima-nova-light-italic;
+
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-direction: column;
+
+        height: 35%;
+
+        .small {
+          font-size: 0.8em;
+        }
+      }
+
+      .bold {
+        @include proxima-nova-bold;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-direction: column;
+
+        height: 45%;
+
+        span {
+          font-style: italic;
+          font-weight: bold;
+        }
+
+        .small {
+          font-size: 0.8em;
+          line-height: normal;
+        }
+
+        p {
+          height: 25%;
+          line-height: 1.4em;
+          &:first-child {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+          }
+          &:last-child {
+            line-height: 1em;
+            margin-top: 0.8em;
+          }
+        }
+      }
+      .large {
+        font-size: 1.13em;
+      }
+    }
+  }
+}

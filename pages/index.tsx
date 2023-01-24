@@ -6,6 +6,7 @@ import { getApiUrlBase } from "utils";
 import Menu from "components/menu";
 import ScrollGallery from "components/ScrollGallery";
 import { useState } from "react";
+import BusinessCard from "components/BusinessCard";
 
 /**
  * this page and the gallery are duped code (getStaticProps) but I am seeing that
@@ -33,6 +34,7 @@ export default function Home({
       <main>
         <HomeSplash setIsScrolledPastHomeSplash={setMenuScrolledPast} />
         <ScrollGallery images={images} notFound={notFound} />
+        <BusinessCard />
       </main>
     </>
   );
