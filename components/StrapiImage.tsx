@@ -46,7 +46,17 @@ const backupLoader = (props: StrapiProps | undefined) => {
   return props?.src || "";
 };
 
-const StrapiImage = ({ src, alt, width, height, fill, sizes }: any) => {
+// @TODO: any
+const StrapiImage = ({
+  src,
+  alt,
+  width,
+  height,
+  fill,
+  sizes,
+  style,
+  priority,
+}: any) => {
   const [useSizedImage, setUseSizedImage] = useState(true);
   const [useBaseImage, setUseBaseImage] = useState(false);
   const handleError = () => {
@@ -65,6 +75,8 @@ const StrapiImage = ({ src, alt, width, height, fill, sizes }: any) => {
           width={width}
           height={height}
           sizes={sizes}
+          style={style}
+          priority={priority}
         />
       )}
       {useBaseImage && (
@@ -76,6 +88,8 @@ const StrapiImage = ({ src, alt, width, height, fill, sizes }: any) => {
           width={width}
           height={height}
           sizes={sizes}
+          style={style}
+          priority={priority}
         />
       )}
     </>

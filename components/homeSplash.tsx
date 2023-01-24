@@ -3,13 +3,16 @@ import styles from "styles/homeSplash.module.scss";
 import Link from "next/link";
 
 interface Props {
-  setIsScrolledPastHomeSplash: (isScrolledPast: boolean) => void;
+  setIsScrolledPastHomeSplash?: (isScrolledPast: boolean) => void;
 }
 
 function HomeSplash({ setIsScrolledPastHomeSplash }: Props) {
   const menuScrollPointRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const onScroll = (e: Event) => {
+      if (!setIsScrolledPastHomeSplash) {
+        return;
+      }
       const windowScrollTop = window.document?.scrollingElement?.scrollTop;
       const refOffsetHeight = menuScrollPointRef.current?.offsetHeight;
       if (!windowScrollTop || !refOffsetHeight) {

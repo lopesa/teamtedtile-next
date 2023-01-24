@@ -1,5 +1,4 @@
-import Router, { useRouter } from "next/router";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { IGalleryItem, IGalleryItemsResponse } from "interfaces/gallery";
 import {
   getApiUrlBase,
@@ -7,15 +6,13 @@ import {
   getGalleryTitleFromUrlString,
 } from "utils";
 import { GetStaticPaths, GetStaticProps } from "next";
-import Image from "next/image";
 import styles from "styles/GalleryItem.module.scss";
 import Head from "next/head";
 import HomeSplash from "components/homeSplash";
-import { motion, AnimatePresence } from "framer-motion";
-import ScrollGallery from "components/ScrollGallery";
 import Overlay from "components/overlay";
-import { RefObject, useCallback, useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import useEscGoesToRoute from "hooks/useEscGoesToRoute";
+import StrapiImage from "components/StrapiImage";
 
 interface props {
   galleryItem: IGalleryItem["attributes"] | null;
@@ -192,12 +189,6 @@ export default function GalleryItem({ galleryItem }: props) {
           {galleryItem && (
             <>
               {galleryItem.previous && (
-                // <Link
-                //   onClick={() => setSlideDirection("left")}
-                //   href={`/gallery/${getGalleryUrlStringFromTitle(
-                //     galleryItem.previous.title
-                //   )}`}
-                // >
                 <a
                   onClick={(e) => {
                     e.preventDefault();
@@ -210,7 +201,6 @@ export default function GalleryItem({ galleryItem }: props) {
                     ></div>
                   </div>
                 </a>
-                // </Link>
               )}
               <div ref={frameRef} className={styles.imageFrame}>
                 <div
@@ -222,13 +212,7 @@ export default function GalleryItem({ galleryItem }: props) {
                     transition: baseGalleryTransition,
                   }}
                 >
-                  {/* <AnimatePresence>
-                  <motion.div
-                    ref={slideRef}
-                    className={styles.imagesContainer}
-                    key={galleryItem.title}
-                  > */}
-                  <Image
+                  <StrapiImage
                     src={images?.leftImageSrc || ""}
                     alt=""
                     width={width}
@@ -236,7 +220,7 @@ export default function GalleryItem({ galleryItem }: props) {
                     style={{ objectFit: "contain" }}
                     priority
                   />
-                  <Image
+                  <StrapiImage
                     src={images?.centerImageSrc || ""}
                     alt=""
                     width={width}
@@ -244,7 +228,7 @@ export default function GalleryItem({ galleryItem }: props) {
                     style={{ objectFit: "contain" }}
                     priority
                   />
-                  <Image
+                  <StrapiImage
                     src={images?.rightImageSrc || ""}
                     alt=""
                     width={width}
@@ -252,20 +236,10 @@ export default function GalleryItem({ galleryItem }: props) {
                     style={{ objectFit: "contain" }}
                     priority
                   />
-                  {/* )} */}
-                  {/* </motion.div>
-                </AnimatePresence> */}
                 </div>
               </div>
-              {/* </motion.div> */}
 
               {galleryItem.next && (
-                // <Link
-                //   onClick={() => setSlideDirection("right")}
-                //   href={`/gallery/${getGalleryUrlStringFromTitle(
-                //     galleryItem.next.title
-                //   )}`}
-                // >
                 <a
                   onClick={(e) => {
                     e.preventDefault();
@@ -278,13 +252,11 @@ export default function GalleryItem({ galleryItem }: props) {
                     ></div>
                   </div>
                 </a>
-                // </Link>
               )}
             </>
           )}
         </Overlay>
         <HomeSplash />
-        {/* <ScrollGallery images={images} notFound={notFound} /> */}
       </main>
     </>
   );
