@@ -5,7 +5,7 @@ import ActiveLink from "./activeLink";
 
 type MenuProps = {
   backgroundColor?: string;
-  menuScrolledPast: boolean;
+  menuScrolledPast?: boolean;
 };
 
 export default function Menu({

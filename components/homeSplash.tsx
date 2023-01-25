@@ -24,7 +24,7 @@ function HomeSplash({ setIsScrolledPastHomeSplash }: Props) {
     window.addEventListener("scroll", onScroll);
 
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [setIsScrolledPastHomeSplash]);
   return (
     <section className={styles.homeSplashContainer}>
       <div className={styles.topRow}>
