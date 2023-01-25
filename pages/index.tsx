@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import Head from "next/head";
+import PageHead from "components/PageHead";
 import HomeSplash from "components/homeSplash";
 import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
 import { getApiUrlBase } from "utils";
@@ -24,11 +24,7 @@ export default function Home({
   const [menuScrolledPast, setMenuScrolledPast] = useState(false);
   return (
     <>
-      <Head>
-        <title>Team Ted Tile -- Home</title>
-        <meta name="description" content="Team Ted Tile -- Home" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <PageHead metaContent="Home" />
 
       <Menu menuScrolledPast={menuScrolledPast} />
       <main>

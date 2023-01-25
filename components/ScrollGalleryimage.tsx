@@ -24,7 +24,9 @@ const ScrollGalleryImage = ({ image }: ScrollGalleryImageProps) => {
         sizes="(max-width: 1100px) 100vw, 600px"
       />
       {image.attributes.copyright && (
-        <div className="copyright">{image.attributes.copyright}</div>
+        <div className="copyright">
+          Photo &copy; {image.attributes.copyright}
+        </div>
       )}
       {image.attributes.tedHeadTextRich && (
         <TedHeadCaptionBar tedHeadText={image.attributes.tedHeadTextRich} />

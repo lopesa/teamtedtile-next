@@ -5,6 +5,7 @@ import OverlayImageHeader from "components/OverlayImageHeader";
 import styles from "styles/about.module.scss";
 import { getApiUrlBase } from "utils";
 import Image from "next/image";
+import PageHead from "components/PageHead";
 
 type IAboutData = {
   copy: string;
@@ -38,6 +39,7 @@ export default function About({ copy, bodyImages }: IAboutProps) {
   let copyAsArray = copy.length ? copy.split(/\n/).filter((a) => a.length) : [];
   return (
     <>
+      <PageHead metaContent="About" />
       <Overlay>
         <>
           <OverlayImageHeader

@@ -7,6 +7,7 @@ import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
 import { getApiUrlBase } from "utils";
 import { RefObject, useRef, useState } from "react";
 import BusinessCard from "components/BusinessCard";
+import PageHead from "components/PageHead";
 
 /**
  * this page and the index are duped code mostly but I am seeing that
@@ -29,11 +30,7 @@ export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
   const [menuScrolledPast, setMenuScrolledPast] = useState(false);
   return (
     <>
-      <Head>
-        <title>Team Ted Tile -- Home</title>
-        <meta name="description" content="Team Ted Tile -- Home" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <PageHead metaContent="Gallery" />
 
       <Menu menuScrolledPast={menuScrolledPast} />
       <main>

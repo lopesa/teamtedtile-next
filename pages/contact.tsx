@@ -7,6 +7,7 @@ import "react-phone-number-input/style.css";
 import Input from "react-phone-number-input/input";
 import { isValidPhoneNumber, Value } from "react-phone-number-input";
 import Toast from "components/Toast";
+import PageHead from "components/PageHead";
 
 export default function Contact() {
   const [email, setEmail] = useState("");
@@ -91,6 +92,7 @@ export default function Contact() {
   };
   return (
     <>
+      <PageHead metaContent="Contact" />
       <Overlay>
         <OverlayImageHeader
           backgroundImage="/images/IMG_0032FLAT-WEB-crop.jpg"
@@ -119,7 +121,7 @@ export default function Contact() {
               value={telephone}
               onChange={setTelephone}
               onBlur={handlePhoneBlur}
-              maxlength={16}
+              maxLength={16}
             />
             {phoneError && <p>{phoneError}</p>}
             <textarea

@@ -13,6 +13,7 @@ import Overlay from "components/overlay";
 import { RefObject, useEffect, useRef, useState } from "react";
 import useEscGoesToRoute from "hooks/useEscGoesToRoute";
 import StrapiImage from "components/StrapiImage";
+import PageHead from "components/PageHead";
 
 interface props {
   galleryItem: IGalleryItem["attributes"] | null;
@@ -176,14 +177,14 @@ export default function GalleryItem({ galleryItem }: props) {
     baseGalleryTransition,
   ]);
 
+  const getGalleryMeta = () => {
+    return `gallery -- ${getGalleryTitleFromUrlString(router.asPath)?.slice(
+      9
+    )}`;
+  };
   return (
     <>
-      <Head>
-        <title>Team Ted Tile -- Home</title>
-        <meta name="description" content="Team Ted Tile -- Home" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <PageHead metaContent={getGalleryMeta()} />
       <main>
         <Overlay>
           {galleryItem && (
