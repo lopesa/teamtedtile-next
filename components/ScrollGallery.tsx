@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { IGalleryItem } from "interfaces/gallery";
 import createJustifiedLayout from "justified-layout";
