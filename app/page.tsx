@@ -15,7 +15,6 @@ export const metadata: Metadata = {
 const getImages = async (): Promise<{
   props: { images: IGalleryItem[]; notFound: boolean };
 }> => {
-  // https://developer.mozilla.org/en-US/docs/Web/API/fetch
   const res = await fetch(
     `${getApiUrlBase()}/api/gallery-images?populate=*`
   ).catch((e) => {});
