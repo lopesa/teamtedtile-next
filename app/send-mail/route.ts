@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   const params = await request.json();
 
   if (!process.env.SENDGRID_API_KEY) {
-    return;
+    return NextResponse.json({ success: false });
   }
 
   Sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
