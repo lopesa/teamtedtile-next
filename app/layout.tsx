@@ -17,7 +17,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/vac1ugo.css" />
       </head>
       <body>
-        <Menu triggerElementRef={menuTriggerRef} />
+        <Menu triggerElementRef={menuTriggerRef} position="fixed" />
         <HomeSplash />
         <div ref={menuTriggerRef} />
         {children}

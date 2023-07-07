@@ -123,7 +123,7 @@ export default async function About() {
           </div>
         </>
       </Overlay>
-      <HomeSplash />
+      {/* <HomeSplash /> */}
     </>
   );
 }

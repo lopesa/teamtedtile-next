@@ -7,11 +7,13 @@ import PageScrollSpy from "./PageScrollSpy";
 
 type MenuProps = {
   backgroundColor?: string;
-  triggerElementRef: React.RefObject<HTMLElement>;
+  position?: "fixed" | "absolute";
+  triggerElementRef?: React.RefObject<HTMLElement>;
 };
 
 export default function Menu({
   backgroundColor,
+  position,
   triggerElementRef,
 }: PropsWithChildren<MenuProps>) {
   const [menuScrolledPast, setMenuScrolledPast] = useState(false);
@@ -21,7 +23,7 @@ export default function Menu({
         className={`${styles.menuContainer} ${
           menuScrolledPast ? styles.scrolled : ""
         }`}
-        style={{ backgroundColor: backgroundColor }}
+        style={{ backgroundColor: backgroundColor, position: position }}
       >
         <ul>
           <li>
@@ -61,16 +63,18 @@ export default function Menu({
           </a>
         </div> */}
       </nav>
-      <PageScrollSpy
-        triggerElementRef={triggerElementRef}
-        scrollEvent={(closeToBottom) => {
-          if (closeToBottom) {
-            setMenuScrolledPast(true);
-          } else {
-            setMenuScrolledPast(false);
-          }
-        }}
-      />
+      {triggerElementRef && (
+        <PageScrollSpy
+          triggerElementRef={triggerElementRef}
+          scrollEvent={(closeToBottom) => {
+            if (closeToBottom) {
+              setMenuScrolledPast(true);
+            } else {
+              setMenuScrolledPast(false);
+            }
+          }}
+        />
+      )}
     </>
   );
 }

@@ -7,7 +7,7 @@ export default function Overlay(props: PropsWithChildren) {
   return (
     <div className={styles.overlay}>
       <div className={styles.innerOverlay}>
-        <Menu backgroundColor="white" />
+        <Menu backgroundColor="white" position="absolute" />
         <Link href="/" className={styles.close}>
           &times;
         </Link>

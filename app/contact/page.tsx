@@ -30,7 +30,6 @@ export default function Contact() {
           <ContactForm />
         </div>
       </Overlay>
-      <HomeSplash />
     </>
   );
 }

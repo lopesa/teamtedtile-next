@@ -32,7 +32,7 @@ export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
     <>
       <PageHead metaContent="Gallery" />
 
-      <Menu menuScrolledPast={menuScrolledPast} />
+      <Menu position="fixed" />
       <main>
         {/* <HomeSplash setIsScrolledPastHomeSplash={setMenuScrolledPast} /> */}
         <HomeSplash />
