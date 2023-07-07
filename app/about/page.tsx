@@ -5,6 +5,12 @@ import styles from "styles/about.module.scss";
 import { getApiUrlBase } from "utils";
 import Image from "next/image";
 import PageHead from "components/PageHead";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Team Ted Tile -- About",
+  description: "About Team Ted Tile",
+};
 
 type IAboutData = {
   copy: string;
