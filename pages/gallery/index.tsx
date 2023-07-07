@@ -34,7 +34,8 @@ export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
 
       <Menu menuScrolledPast={menuScrolledPast} />
       <main>
-        <HomeSplash setIsScrolledPastHomeSplash={setMenuScrolledPast} />
+        {/* <HomeSplash setIsScrolledPastHomeSplash={setMenuScrolledPast} /> */}
+        <HomeSplash />
         <ScrollGallery
           ref={scrollGalleryRef}
           images={images}
