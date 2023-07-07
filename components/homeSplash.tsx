@@ -1,33 +1,7 @@
-import { useEffect, useRef } from "react";
 import styles from "styles/homeSplash.module.scss";
 import Link from "next/link";
 
-interface Props {
-  setIsScrolledPastHomeSplash?: (isScrolledPast: boolean) => void;
-}
-
-// function HomeSplash({ setIsScrolledPastHomeSplash }: Props) {
 function HomeSplash() {
-  // const menuScrollPointRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   const onScroll = (e: Event) => {
-  //     if (!setIsScrolledPastHomeSplash) {
-  //       return;
-  //     }
-  //     const windowScrollTop = window.document?.scrollingElement?.scrollTop;
-  //     const refOffsetHeight = menuScrollPointRef.current?.offsetHeight;
-  //     if (!windowScrollTop || !refOffsetHeight) {
-  //       return;
-  //     }
-  //     const isScrolledPast = windowScrollTop > refOffsetHeight;
-  //     setIsScrolledPastHomeSplash(isScrolledPast);
-  //   };
-  //   window.addEventListener("scroll", onScroll);
-
-  //   return () => window.removeEventListener("scroll", onScroll);
-  // }, [setIsScrolledPastHomeSplash]);
-
   return (
     <section className={styles.homeSplashContainer}>
       <div className={styles.topRow}>
@@ -50,7 +24,6 @@ function HomeSplash() {
           </div>
         </div>
       </div>
-      {/* <div className={styles.bottomRow} ref={menuScrollPointRef}> */}
       <div className={styles.bottomRow}>
         <div className={styles.one}>
           <div className="copyright">Photo &copy; Ruth Hyndman Design</div>

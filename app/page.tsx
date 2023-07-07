@@ -1,9 +1,6 @@
-import HomeSplash from "components/homeSplash";
 import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
 import { getApiUrlBase } from "utils";
-import Menu from "components/menu";
 import ScrollGallery from "components/ScrollGallery";
-// import { useState } from "react";
 import BusinessCard from "components/BusinessCard";
 import { Metadata } from "next";
 
@@ -27,14 +24,14 @@ const getImages = async (): Promise<{
 };
 
 export default async function Home() {
-  //   const [menuScrolledPast, setMenuScrolledPast] = useState(false);
   const imagesCall = await getImages();
   const { images, notFound } = imagesCall.props;
   return (
-    <main>
-      <HomeSplash />
-      <ScrollGallery images={images} notFound={notFound} />
-      <BusinessCard />
-    </main>
+    <>
+      <main>
+        <ScrollGallery images={images} notFound={notFound} />
+        <BusinessCard />
+      </main>
+    </>
   );
 }
