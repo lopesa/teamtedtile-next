@@ -72,18 +72,6 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
       return;
     }
 
-    // prefetch previous and next pages @TODO, move these??
-    if (galleryItem.previous?.title) {
-      router.prefetch(
-        `/gallery/${getGalleryUrlStringFromTitle(galleryItem.previous.title)}`
-      );
-    }
-    if (galleryItem.next?.title) {
-      router.prefetch(
-        `/gallery/${getGalleryUrlStringFromTitle(galleryItem.next.title)}`
-      );
-    }
-
     const galleryItemUrl = getGalleryUrlStringFromTitle(
       direction === "left"
         ? galleryItem.previous!.title
@@ -110,6 +98,23 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
     elRef?.current?.addEventListener("transitionend", transitionEndFunction);
     setImagesContainerTranslateX(direction === "left" ? 0 : -2 * width);
   };
+
+  const prefetchAdjacentSlides = () => {
+    // prefetch previous and next pages @TODO, move these??
+    if (galleryItem.previous?.title) {
+      router.prefetch(
+        `/gallery/${getGalleryUrlStringFromTitle(galleryItem.previous.title)}`
+      );
+    }
+    if (galleryItem.next?.title) {
+      router.prefetch(
+        `/gallery/${getGalleryUrlStringFromTitle(galleryItem.next.title)}`
+      );
+    }
+  };
+  useEffect(() => {
+    prefetchAdjacentSlides();
+  }, [galleryItem]);
 
   useEscGoesToRoute("/gallery");
 
