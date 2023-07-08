@@ -87,11 +87,17 @@ function TedHeadCaptionBar({ tedHeadText }: TedHeadCaptionBarProps) {
         <div ref={tedHeadTextDiv} className={styles.tedHeadText}>
           <ReactMarkdown
             rehypePlugins={[
-              [rehypeExternalLinks, { rel: "nofollow", target: "_blank" }],
+              [
+                rehypeExternalLinks,
+                {
+                  rel: "nofollow",
+                  target: "_blank",
+                  referrerpolicy: "no-referrer",
+                },
+              ],
             ]}
-          >
-            {tedHeadText}
-          </ReactMarkdown>
+            children={tedHeadText}
+          />
           <span onClick={handleClose}>&times;</span>
         </div>
       </div>
