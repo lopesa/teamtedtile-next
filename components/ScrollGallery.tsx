@@ -8,7 +8,7 @@ import useWindowSize from "hooks/useWindowSize";
 import { useEffect, useState, forwardRef, Ref } from "react";
 import { BREAKPOINTS } from "enums/Breakpoints";
 import ScrollGalleryImage from "./ScrollGalleryimage";
-import { getGalleryUrlStringFromTitle } from "utils";
+import { getGalleryUrlStringFromTitle } from "utils/GeneralUtils";
 import Link from "next/link";
 
 enum GALLERY_WIDTHS {

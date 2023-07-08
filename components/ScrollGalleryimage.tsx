@@ -1,5 +1,5 @@
 import { IGalleryItem } from "interfaces/gallery";
-import { getApiUrlBase } from "utils";
+import { getApiUrlBase } from "utils/GeneralUtils";
 import styles from "styles/ScrollGalleryImage.module.scss";
 import StrapiImage from "./StrapiImage";
 import TedHeadCaptionBar from "./TedHeadCaptionBar";

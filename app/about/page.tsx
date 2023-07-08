@@ -2,7 +2,7 @@ import HomeSplash from "components/homeSplash";
 import Overlay from "components/overlay";
 import OverlayImageHeader from "components/OverlayImageHeader";
 import styles from "styles/about.module.scss";
-import { getApiUrlBase } from "utils";
+import { getApiUrlBase } from "utils/GeneralUtils";
 import Image from "next/image";
 import PageHead from "components/PageHead";
 import { Metadata } from "next";
