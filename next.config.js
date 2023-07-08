@@ -14,6 +14,7 @@ const nextConfig = {
         hostname: "localhost",
       },
     ],
+    minimumCacheTTL: 60,
   },
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],

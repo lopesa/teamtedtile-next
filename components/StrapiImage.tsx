@@ -67,7 +67,7 @@ const StrapiImage = ({
     <>
       {useSizedImage && (
         <Image
-          loader={sizedImageLoader}
+          // loader={sizedImageLoader}
           src={src}
           onError={handleError}
           alt={alt}
