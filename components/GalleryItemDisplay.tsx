@@ -99,22 +99,22 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
     setImagesContainerTranslateX(direction === "left" ? 0 : -2 * width);
   };
 
-  const prefetchAdjacentSlides = () => {
-    // prefetch previous and next pages @TODO, move these??
-    if (galleryItem.previous?.title) {
-      router.prefetch(
-        `/gallery/${getGalleryUrlStringFromTitle(galleryItem.previous.title)}`
-      );
-    }
-    if (galleryItem.next?.title) {
-      router.prefetch(
-        `/gallery/${getGalleryUrlStringFromTitle(galleryItem.next.title)}`
-      );
-    }
-  };
   useEffect(() => {
+    const prefetchAdjacentSlides = () => {
+      // prefetch previous and next pages @TODO, move these??
+      if (galleryItem.previous?.title) {
+        router.prefetch(
+          `/gallery/${getGalleryUrlStringFromTitle(galleryItem.previous.title)}`
+        );
+      }
+      if (galleryItem.next?.title) {
+        router.prefetch(
+          `/gallery/${getGalleryUrlStringFromTitle(galleryItem.next.title)}`
+        );
+      }
+    };
     prefetchAdjacentSlides();
-  }, [galleryItem, prefetchAdjacentSlides]);
+  }, [galleryItem, router]);
 
   useEscGoesToRoute("/gallery");
 

@@ -54,6 +54,7 @@ const ActiveLink = ({
     props.as,
     props.href,
     activeClassName,
+    activePathname,
     className,
     computedClassName,
   ]);

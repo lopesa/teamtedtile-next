@@ -96,8 +96,9 @@ function TedHeadCaptionBar({ tedHeadText }: TedHeadCaptionBarProps) {
                 },
               ],
             ]}
-            children={tedHeadText}
-          />
+          >
+            {tedHeadText}
+          </ReactMarkdown>
           <span onClick={handleClose}>&times;</span>
         </div>
       </div>
