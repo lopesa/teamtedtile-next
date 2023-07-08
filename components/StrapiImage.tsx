@@ -56,6 +56,7 @@ const StrapiImage = ({
   sizes,
   style,
   priority,
+  isSlide = false,
 }: any) => {
   const [useSizedImage, setUseSizedImage] = useState(true);
   const [useBaseImage, setUseBaseImage] = useState(false);
@@ -67,7 +68,8 @@ const StrapiImage = ({
     <>
       {useSizedImage && (
         <Image
-          // loader={sizedImageLoader}
+          loader={!isSlide ? sizedImageLoader : undefined}
+          loading={isSlide ? "eager" : "lazy"}
           src={src}
           onError={handleError}
           alt={alt}

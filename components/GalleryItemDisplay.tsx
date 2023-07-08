@@ -114,7 +114,7 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
   };
   useEffect(() => {
     prefetchAdjacentSlides();
-  }, [galleryItem]);
+  }, [galleryItem, prefetchAdjacentSlides]);
 
   useEscGoesToRoute("/gallery");
 
@@ -230,6 +230,7 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
                 height={height}
                 style={{ objectFit: "contain" }}
                 priority
+                isSlide={true}
               />
               <StrapiImage
                 src={images?.centerImageSrc || ""}
@@ -238,6 +239,7 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
                 height={height}
                 style={{ objectFit: "contain" }}
                 priority
+                isSlide={true}
               />
               <StrapiImage
                 src={images?.rightImageSrc || ""}
@@ -246,6 +248,7 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
                 height={height}
                 style={{ objectFit: "contain" }}
                 priority
+                isSlide={true}
               />
             </div>
           </div>
