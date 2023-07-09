@@ -57,6 +57,7 @@ const StrapiImage = ({
   style,
   priority,
   isSlide = false,
+  onLoad,
 }: any) => {
   const [useSizedImage, setUseSizedImage] = useState(true);
   const [useBaseImage, setUseBaseImage] = useState(false);
@@ -79,6 +80,7 @@ const StrapiImage = ({
           sizes={sizes}
           style={style}
           priority={priority}
+          onLoad={onLoad}
         />
       )}
       {useBaseImage && (
@@ -93,6 +95,7 @@ const StrapiImage = ({
           sizes={sizes}
           style={style}
           priority={priority}
+          onLoad={onLoad}
         />
       )}
     </>

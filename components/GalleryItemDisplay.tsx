@@ -99,22 +99,46 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
     setImagesContainerTranslateX(direction === "left" ? 0 : -2 * width);
   };
 
-  useEffect(() => {
-    const prefetchAdjacentSlides = () => {
-      // prefetch previous and next pages @TODO, move these??
-      if (galleryItem.previous?.title) {
-        router.prefetch(
-          `/gallery/${getGalleryUrlStringFromTitle(galleryItem.previous.title)}`
-        );
-      }
-      if (galleryItem.next?.title) {
-        router.prefetch(
-          `/gallery/${getGalleryUrlStringFromTitle(galleryItem.next.title)}`
-        );
-      }
-    };
-    prefetchAdjacentSlides();
-  }, [galleryItem, router]);
+  const onLoadPreviousImage = () => {
+    if (images?.leftImageSrc === images?.centerImageSrc) {
+      return;
+    }
+
+    if (galleryItem.previous?.title) {
+      router.prefetch(
+        `/gallery/${getGalleryUrlStringFromTitle(galleryItem.previous.title)}`
+      );
+    }
+  };
+
+  const onLoadNextImage = () => {
+    if (images?.rightImageSrc === images?.centerImageSrc) {
+      return;
+    }
+    if (galleryItem.next?.title) {
+      router.prefetch(
+        `/gallery/${getGalleryUrlStringFromTitle(galleryItem.next.title)}`
+      );
+    }
+  };
+
+  // useEffect(() => {
+  //   const prefetchAdjacentSlides = () => {
+  //     // prefetch previous and next pages @TODO, move these??
+  //     debugger;
+  //     if (galleryItem.previous?.title) {
+  //       router.prefetch(
+  //         `/gallery/${getGalleryUrlStringFromTitle(galleryItem.previous.title)}`
+  //       );
+  //     }
+  //     if (galleryItem.next?.title) {
+  //       router.prefetch(
+  //         `/gallery/${getGalleryUrlStringFromTitle(galleryItem.next.title)}`
+  //       );
+  //     }
+  //   };
+  //   prefetchAdjacentSlides();
+  // }, [galleryItem, router]);
 
   useEscGoesToRoute("/gallery");
 
@@ -126,7 +150,7 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
    *   (galleryItem)) -> setImagesContainerTranslateX(-width);
    */
   useEffect(() => {
-    if (frameRef.current !== null) {
+    if (frameRef.current !== null && frameRef.current.offsetWidth) {
       setHeight(frameRef.current.offsetHeight);
       setWidth(frameRef.current.offsetWidth);
     }
@@ -231,6 +255,7 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
                 style={{ objectFit: "contain" }}
                 priority
                 isSlide={true}
+                onLoad={onLoadPreviousImage}
               />
               <StrapiImage
                 src={images?.centerImageSrc || ""}
@@ -249,6 +274,7 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
                 style={{ objectFit: "contain" }}
                 priority
                 isSlide={true}
+                onLoad={onLoadNextImage}
               />
             </div>
           </div>
