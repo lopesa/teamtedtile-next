@@ -46,23 +46,17 @@
       transform: rotate(10deg);
     }
 
+    &.active {
+      img {
+        width: 100%;
+      }
+    }
+
     img {
       width: 90%;
       height: auto;
 
       transition: all 0.2s ease-in-out;
-
-      &.active {
-        width: 100%;
-      }
-
-      &.animateLeft {
-        transform: rotate(-20deg);
-      }
-
-      &.animateRight {
-        transform: rotate(10deg);
-      }
     }
   }
 
@@ -70,15 +64,36 @@
     flex-grow: 1;
     overflow: hidden;
 
+    color: $white;
+    @include proxima-nova;
+    font-size: 1.6em;
+
+    letter-spacing: 0.03em;
+    align-self: end;
+    margin-bottom: 7px;
+
+      
     .tedHeadText {
+      position: relative;
+      .tedHeadTextCaptionClose {
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        font-size: 1.5em;
+        font-weight: 300;
+        line-height: 1em;
+        &:hover {
+          color: $warm-grey;
+        }
+      }
       transition: all 0.5s ease-in-out;
 
-      width: fit-content;
+      // width: fit-content;
+      width: 80%;
       margin-left: -300%;
       overflow: hidden;
 
       background-color: $blue-new;
-      color: $white;
       padding: 5px 10px 5px 20px;
 
       a {
@@ -91,19 +106,16 @@
         }
       }
 
-      @include proxima-nova;
-      font-size: 1.6em;
+      
 
-      letter-spacing: 0.03em;
+      // span {
+      //   margin-left: 10px;
+      //   font-size: 1.2em;
 
-      span {
-        margin-left: 10px;
-        font-size: 1.2em;
-
-        &:hover {
-          color: $warm-grey;
-        }
-      }
+      //   &:hover {
+      //     color: $warm-grey;
+      //   }
+      // }
 
       &.active {
         margin-left: 1%;

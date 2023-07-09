@@ -1,8 +1,9 @@
+"use client";
+
 import styles from "styles/TedHeadCaptionBar.module.scss";
 import Image from "next/image";
 import tedHeadImg from "public/images/ted_calvert_icon.png";
 import { useRef, MouseEvent, useState } from "react";
-import { removeListener } from "process";
 import ReactMarkdown from "react-markdown";
 import rehypeExternalLinks from "rehype-external-links";
 
@@ -14,7 +15,7 @@ function TedHeadCaptionBar({ tedHeadText }: TedHeadCaptionBarProps) {
   const tedHeadOverallBar = useRef<HTMLDivElement>(null);
   const tedHeadImgContainer = useRef<HTMLDivElement>(null);
   const tedHeadTextDiv = useRef<HTMLDivElement>(null);
-  const [captionOpened, setCaptionedOpened] = useState(false);
+  const [captionOpened, setCaptionOpened] = useState(false);
   const SPEED = 150;
 
   const shakeTeadHead = () => {
@@ -36,10 +37,12 @@ function TedHeadCaptionBar({ tedHeadText }: TedHeadCaptionBarProps) {
   };
 
   const handleMouseOver = (e: MouseEvent) => {
+    debugger;
     tedHeadOverallBar.current?.classList.add(styles.active);
   };
 
-  const handleMouseOut = (e: MouseEvent) => {
+  const handleMouseOut = (ev: MouseEvent) => {
+    debugger;
     if (captionOpened) {
       return;
     }
@@ -47,10 +50,9 @@ function TedHeadCaptionBar({ tedHeadText }: TedHeadCaptionBarProps) {
   };
 
   const handleClick = (e: MouseEvent) => {
-    e.stopPropagation();
     e.preventDefault();
+    setCaptionOpened(true);
 
-    setCaptionedOpened(true);
     shakeTeadHead();
   };
 
@@ -60,15 +62,20 @@ function TedHeadCaptionBar({ tedHeadText }: TedHeadCaptionBarProps) {
     if (!tedHeadTextDiv.current) {
       return;
     }
-    const transitionEndListener = (tedHeadTextDiv.current.ontransitionend =
-      () => {
-        tedHeadOverallBar.current?.classList.remove(styles.active);
-        tedHeadImgContainer.current?.classList.remove(styles.active);
+    const transitionEndListener = () => {
+      tedHeadOverallBar.current?.classList.remove(styles.active);
+      tedHeadImgContainer.current?.classList.remove(styles.active);
+      setCaptionOpened(false);
 
-        setCaptionedOpened(false);
-
-        removeListener("transitionend", transitionEndListener);
-      });
+      tedHeadTextDiv.current?.removeEventListener(
+        "transitionend",
+        transitionEndListener
+      );
+    };
+    tedHeadTextDiv.current.addEventListener(
+      "transitionend",
+      transitionEndListener
+    );
     tedHeadTextDiv.current?.classList.remove(styles.active);
   };
 
@@ -85,6 +92,9 @@ function TedHeadCaptionBar({ tedHeadText }: TedHeadCaptionBarProps) {
       </div>
       <div className={styles.tedHeadTextHolder}>
         <div ref={tedHeadTextDiv} className={styles.tedHeadText}>
+          <div onClick={handleClose} className={styles.tedHeadTextCaptionClose}>
+            &times;
+          </div>
           <ReactMarkdown
             rehypePlugins={[
               [
@@ -99,7 +109,6 @@ function TedHeadCaptionBar({ tedHeadText }: TedHeadCaptionBarProps) {
           >
             {tedHeadText}
           </ReactMarkdown>
-          <span onClick={handleClose}>&times;</span>
         </div>
       </div>
     </div>
