@@ -84,6 +84,7 @@ const StrapiImage = ({
       {useBaseImage && (
         <Image
           loader={backupLoader}
+          loading={isSlide ? "eager" : "lazy"}
           src={src}
           alt={alt}
           fill={fill}
@@ -99,3 +100,63 @@ const StrapiImage = ({
 };
 
 export default StrapiImage;
+
+/**
+ * I implemeted the following idea and it is not a good solution.
+ * the HEAD calls to check if the large images exist seem to be more
+ * expensive than the calls to the non existent images themselves. The
+ * cost is very low so for now I will go with this current front end solution.
+ * Even the Strapi side solution feels weak as we would be upsizing images.
+ * But for the record the file to affect in strapi for that solution would be
+ * implemented @:
+ * /NODE_MODULES/@STRAPI/PLUGIN-UPLOAD/SERVER/SERVICES/IMAGE-MANIPULATION.JS
+ */
+
+// const [sizedImageExists, setSizedImageExists] = useState<boolean | null>(
+//   null
+// );
+
+// useEffect(() => {
+//   const sizedImageUrl = sizedImageLoader({ src, width });
+//   const fetchData = async () => {
+//     const imageExistsCall = await fetch(sizedImageUrl, {
+//       method: "HEAD",
+//     }).catch((e) => {});
+//     const imageExists = imageExistsCall ? imageExistsCall.ok : false;
+//     setSizedImageExists(imageExists);
+//   };
+//   fetchData();
+// }, []);
+
+// return (
+// <>
+//   {sizedImageExists !== null &&
+//     (sizedImageExists ? (
+//       <Image
+//         loader={!isSlide ? sizedImageLoader : undefined}
+//         loading={isSlide ? "eager" : "lazy"}
+//         src={src}
+//         onError={handleError}
+//         alt={alt}
+//         fill={fill}
+//         width={width}
+//         height={height}
+//         sizes={sizes}
+//         style={style}
+//         priority={priority}
+//       />
+//     ) : (
+//       <Image
+//         loader={backupLoader}
+//         loading={isSlide ? "eager" : "lazy"}
+//         src={src}
+//         alt={alt}
+//         fill={fill}
+//         width={width}
+//         height={height}
+//         sizes={sizes}
+//         style={style}
+//         priority={priority}
+//       />
+//     ))}
+// </>
