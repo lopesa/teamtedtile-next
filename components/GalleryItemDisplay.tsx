@@ -10,6 +10,7 @@ import {
 import StrapiImage from "./StrapiImage";
 import { useRouter, usePathname } from "next/navigation";
 import useEscGoesToRoute from "hooks/useEscGoesToRoute";
+import useWindowSize from "hooks/useWindowSize";
 
 interface GalleryItemDisplayProps {
   galleryItem: IGalleryItem["attributes"];
@@ -32,6 +33,7 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
 
   const router = useRouter();
   const pathname = usePathname();
+  const windowSize = useWindowSize();
 
   const getSameImagesState = (
     galleryItem: IGalleryItem["attributes"] | null
@@ -156,7 +158,7 @@ const GalleryItemDisplay = ({ galleryItem }: GalleryItemDisplayProps) => {
     }
     setBaseGalleryTransition("none");
     //   }, [router.asPath]);
-  }, [pathname]);
+  }, [pathname, windowSize]);
 
   // listens to width and sets initial slide width on instantiation
   useEffect(() => {
