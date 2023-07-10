@@ -37,12 +37,10 @@ function TedHeadCaptionBar({ tedHeadText }: TedHeadCaptionBarProps) {
   };
 
   const handleMouseOver = (e: MouseEvent) => {
-    debugger;
     tedHeadOverallBar.current?.classList.add(styles.active);
   };
 
   const handleMouseOut = (ev: MouseEvent) => {
-    debugger;
     if (captionOpened) {
       return;
     }
