@@ -34,7 +34,7 @@ export default function GalleryItem({ galleryItem }: props) {
   const BASE_GALLERY_TRANSITION = "transform 0.5s ease-in-out";
   const [baseGalleryTransition, setBaseGalleryTransition] = useState("none");
 
-  const [isPopState, setIsPopState] = useState(false);
+  // const [isPopState, setIsPopState] = useState(false);
 
   const getSameImagesState = (
     galleryItem: IGalleryItem["attributes"] | null
@@ -125,26 +125,30 @@ export default function GalleryItem({ galleryItem }: props) {
     if (baseGalleryTransition === "none") {
       galleryItem && setImages(getSameImagesState(galleryItem));
     }
-  }, [baseGalleryTransition, galleryItem, isPopState]);
+  }, [baseGalleryTransition, galleryItem]);
+  // }, [baseGalleryTransition, galleryItem, isPopState]);
 
-  useEffect(() => {
-    const handleRouteChangeComplete = () => {
-      if (isPopState) {
-        router.reload();
-      }
-      setIsPopState(false);
-    };
-    router.events.on("routeChangeComplete", handleRouteChangeComplete);
+  // this does not happen currently. Debuggers are never hit
+  // useEffect(() => {
+  //   const handleRouteChangeComplete = () => {
+  //     if (isPopState) {
+  //       debugger;
+  //       router.reload();
+  //     }
+  //     setIsPopState(false);
+  //   };
+  //   router.events.on("routeChangeComplete", handleRouteChangeComplete);
 
-    router.beforePopState(() => {
-      setIsPopState(true);
-      return true;
-    });
+  //   router.beforePopState(() => {
+  //     debugger;
+  //     setIsPopState(true);
+  //     return true;
+  //   });
 
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChangeComplete);
-    };
-  }, [router, isPopState]);
+  //   return () => {
+  //     router.events.off("routeChangeComplete", handleRouteChangeComplete);
+  //   };
+  // }, [router, isPopState]);
 
   useEffect(() => {
     if (!images) {
@@ -177,11 +181,11 @@ export default function GalleryItem({ galleryItem }: props) {
     baseGalleryTransition,
   ]);
 
-  const getGalleryMeta = () => {
-    return `gallery -- ${getGalleryTitleFromUrlString(router.asPath)?.slice(
-      9
-    )}`;
-  };
+  // const getGalleryMeta = () => {
+  //   return `gallery -- ${getGalleryTitleFromUrlString(router.asPath)?.slice(
+  //     9
+  //   )}`;
+  // };
   return (
     <>
       {/* <PageHead metaContent={getGalleryMeta()} /> */}
