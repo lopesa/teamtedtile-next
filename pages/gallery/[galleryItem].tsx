@@ -13,7 +13,13 @@ import Overlay from "components/overlay";
 import { RefObject, useEffect, useRef, useState } from "react";
 import useEscGoesToRoute from "hooks/useEscGoesToRoute";
 import StrapiImage from "components/StrapiImage";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  EventInfo,
+  PanInfo,
+  motion,
+  useMotionValue,
+} from "framer-motion";
 import Link from "next/link";
 // import PageHead from "components/PageHead";
 
@@ -27,6 +33,8 @@ export default function GalleryItem({ galleryItem }: props) {
   const frameRef = useRef<HTMLDivElement>(null);
   const slideRef = useRef<HTMLDivElement>(null);
 
+  const x = useMotionValue(0);
+
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [slideChangeDirection, setSlideChangeDirection] = useState<
@@ -34,24 +42,8 @@ export default function GalleryItem({ galleryItem }: props) {
   >("none");
 
   const [imagesContainerWidth, setImagesContainerWidth] = useState(0);
-  const [imagesContainerTranslateX, setImagesContainerTranslateX] = useState(0);
 
-  const BASE_GALLERY_TRANSITION = "transform 0.5s ease-in-out";
-  const [baseGalleryTransition, setBaseGalleryTransition] = useState("none");
-
-  const getSameImagesState = (
-    galleryItem: IGalleryItem["attributes"] | null
-  ) => {
-    const urlPath = galleryItem?.image?.data?.attributes?.url;
-    const url = urlPath ? `${getApiUrlBase()}${urlPath}` : "";
-    return {
-      leftImageSrc: url,
-      centerImageSrc: url,
-      rightImageSrc: url,
-    };
-  };
-
-  const getFinalImagesState = (
+  const getImageData = (
     galleryItem: IGalleryItem["attributes"] | null | undefined
   ) => {
     return {
@@ -67,8 +59,7 @@ export default function GalleryItem({ galleryItem }: props) {
     };
   };
 
-  // const [images, setImages] = useState(getSameImagesState(galleryItem));
-  const [images, setImages] = useState(getFinalImagesState(galleryItem));
+  const [images, setImages] = useState(getImageData(galleryItem));
 
   const getNextOrPreviousUrl = (direction: "left" | "right") => {
     if (
@@ -86,33 +77,40 @@ export default function GalleryItem({ galleryItem }: props) {
     return `/gallery/${galleryItemUrl}`;
   };
 
-  const doSlideAnimationThenChangeRoutes = async (
-    direction: "left" | "right",
-    elRef?: RefObject<HTMLDivElement>
-  ) => {
-    const goToUrl = getNextOrPreviousUrl(direction);
-    if (!goToUrl) {
+  // const getGalleryMeta = () => {
+  //   return `gallery -- ${getGalleryTitleFromUrlString(router.asPath)?.slice(
+  //     9
+  //   )}`;
+  // };
+
+  /**
+   * ---------------- DRAGGING ----------------
+   */
+  const onDrag = (e: MouseEvent, info: PanInfo) => {
+    const { point, delta, offset, velocity } = info;
+    x.set(x.get() + delta.x);
+  };
+
+  const onDragEnd = (e: MouseEvent, info: PanInfo) => {
+    const { point, delta, offset, velocity } = info;
+    const OFFSET_THRESHOLD = 150;
+
+    if (!(Math.abs(offset.x) > OFFSET_THRESHOLD)) {
+      x.jump(-width);
       return;
     }
-
-    router.push(goToUrl);
-
-    // const transitionEndFunction = () => {
-    //   elRef?.current?.removeEventListener(
-    //     "transitionend",
-    //     transitionEndFunction
-    //   );
-    //   router.push(goToUrl);
-    // };
-    // elRef?.current?.addEventListener("transitionend", transitionEndFunction);
-    // setImagesContainerTranslateX(direction === "left" ? 0 : -2 * width);
+    if (offset.x > 0) {
+      setSlideChangeDirection("left");
+    } else {
+      setSlideChangeDirection("right");
+    }
   };
+  /**
+   * ---------------- END DRAGGING ----------------
+   */
 
   useEscGoesToRoute("/gallery");
 
-  // on route change of initial instantiation, set the height/width of the frame
-  // on further route changes, set the transition to none to start the sequence of
-  // setBaseGalleryTransition("none") -> setImages(getSameImagesState(galleryItem)) -> setImagesContainerTranslateX(-width);
   useEffect(() => {
     if (frameRef.current !== null) {
       setHeight(frameRef.current.offsetHeight);
@@ -120,17 +118,33 @@ export default function GalleryItem({ galleryItem }: props) {
     }
   }, [router.asPath]);
 
-  // listens to width and sets initial slide width on instantiation
+  /**
+   * listens to width and sets initial slide width on instantiation
+   * also sets the MotionValue (Framer Motion) x to the initial position
+   * not to be confused with the "initial" prop of the motion.div el
+   * without that initial val set also, the value isn't set quickly enough
+   * to avoid a flash of the initial position
+   */
   useEffect(() => {
     setImagesContainerWidth(3 * width);
+    x.set(-width);
   }, [width]);
 
+  /**
+   * for slides after the inital one, have to reset these values
+   * note: they are intially set to the same values on
+   * component instantiation
+   */
   useEffect(() => {
-    // debugger;
-    setImages(getFinalImagesState(galleryItem));
+    setImages(getImageData(galleryItem));
     setSlideChangeDirection("none");
   }, [galleryItem]);
 
+  /**
+   * this is the mechanism for changing routes
+   * other places change the route by calling setSlideChangeDirection
+   * this listens for that change and then changes the route
+   */
   useEffect(() => {
     if (slideChangeDirection === "none") {
       return;
@@ -142,121 +156,55 @@ export default function GalleryItem({ galleryItem }: props) {
     router.push(goToUrl);
   }, [slideChangeDirection]);
 
-  // prepare slide to reset position
-  // useEffect(() => {
-  //   if (baseGalleryTransition === "none") {
-  //     galleryItem && setImages(getSameImagesState(galleryItem));
-  //   }
-  // }, [baseGalleryTransition, galleryItem]);
-
-  // useEffect(() => {
-  //   if (!images) {
-  //     return;
-  //   }
-  //   if (images.rightImageSrc === images.centerImageSrc) {
-  //     if (imagesContainerTranslateX !== -width) {
-  //       setImagesContainerTranslateX(-width);
-  //       return;
-  //     }
-  //     if (
-  //       imagesContainerTranslateX === -width &&
-  //       slideRef.current?.clientWidth !== 0
-  //     ) {
-  //       galleryItem && setImages(getFinalImagesState(galleryItem));
-  //     }
-  //   }
-
-  //   if (
-  //     images.rightImageSrc !== images.centerImageSrc &&
-  //     imagesContainerTranslateX === -width
-  //   ) {
-  //     setBaseGalleryTransition(BASE_GALLERY_TRANSITION);
-  //   }
-  // }, [
-  //   images,
-  //   imagesContainerTranslateX,
-  //   galleryItem,
-  //   width,
-  //   baseGalleryTransition,
-  // ]);
-
-  // const getGalleryMeta = () => {
-  //   return `gallery -- ${getGalleryTitleFromUrlString(router.asPath)?.slice(
-  //     9
-  //   )}`;
-  // };
   return (
     <>
       {/* <PageHead metaContent={getGalleryMeta()} /> */}
-      <AnimatePresence mode="wait">
-        <main key={router.asPath}>
-          <Overlay>
-            {/* <AnimatePresence mode="wait" initial={false}> */}
-            {/* <AnimatePresence mode="wait"> */}
-            {galleryItem && (
-              <>
-                {galleryItem.previous && (
-                  <a
-                    onClick={(e) => {
-                      // e.preventDefault();
-                      setSlideChangeDirection("left");
-                      // doSlideAnimationThenChangeRoutes("left", slideRef);
-                    }}
-                  >
-                    <div className={`${styles.arrow} ${styles.left}`}>
-                      <div
-                        className={`${styles.innerArrow} ${styles.left}`}
-                      ></div>
-                    </div>
-                  </a>
-                  // <Link href={getNextOrPreviousUrl("left") || ""}>
-                  //   <div className={`${styles.arrow} ${styles.left}`}>
-                  //     <div
-                  //       className={`${styles.innerArrow} ${styles.left}`}
-                  //     ></div>
-                  //   </div>
-                  // </Link>
-                )}
-                <div ref={frameRef} className={styles.imageFrame}>
-                  {/* <AnimatePresence mode="wait" initial={false}> */}
+      <main>
+        <Overlay>
+          {galleryItem && (
+            <>
+              {galleryItem.previous && (
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSlideChangeDirection("left");
+                  }}
+                >
+                  <div className={`${styles.arrow} ${styles.left}`}>
+                    <div
+                      className={`${styles.innerArrow} ${styles.left}`}
+                    ></div>
+                  </div>
+                </a>
+              )}
+              <AnimatePresence mode="wait">
+                <div
+                  ref={frameRef}
+                  className={styles.imageFrame}
+                  key={router.asPath}
+                >
                   {width && (
                     <motion.div
                       ref={slideRef}
-                      // key={router.asPath}
                       key="constant"
-                      exit={{
-                        // opacity: 0,
-                        // transition: { duration: 5 },
-                        x: `${
-                          slideChangeDirection === "left"
-                            ? 0
-                            : `${-2 * width}px`
-
-                          // slideChangeDirection === "left"
-                          //   ? `${-2 * width}px`
-                          //   : 0
-                          // slideChangeDirection === "left" ? "-100px" : 0
-                          // slideChangeDirection === "left" ? 0 : -2 * width
-                        }`,
-                      }}
-                      // initial={{ translateX: `-150px` }}
-                      initial={{ x: `${-width}px` }}
                       style={{
                         width: `${imagesContainerWidth}px`,
                         height: "100%",
                         display: "flex",
-                        // translateX: `${-width}px`,
+                        x,
                       }}
+                      initial={{ x: `${-width}px` }}
+                      exit={{
+                        x: `${
+                          slideChangeDirection === "left"
+                            ? 0
+                            : `${-2 * width}px`
+                        }`,
+                      }}
+                      drag="x"
+                      onDrag={onDrag}
+                      onDragEnd={onDragEnd}
                     >
-                      {/* <div
-                  ref={slideRef}
-                  className={styles.imagesContainer}
-                  style={{
-                    width: `${imagesContainerWidth}px`,
-                    transform: `translateX(${imagesContainerTranslateX}px)`,
-                    transition: baseGalleryTransition,
-                  }}
-                > */}
                       <StrapiImage
                         src={images?.leftImageSrc || ""}
                         alt=""
@@ -286,40 +234,28 @@ export default function GalleryItem({ galleryItem }: props) {
                       />
                     </motion.div>
                   )}
-                  {/* </AnimatePresence> */}
-                  {/* </div> */}
                 </div>
+              </AnimatePresence>
 
-                {galleryItem.next && (
-                  <a
-                    onClick={(e) => {
-                      // e.preventDefault();
-                      setSlideChangeDirection("right");
-                      // doSlideAnimationThenChangeRoutes("right", slideRef);
-                    }}
-                  >
-                    <div className={`${styles.arrow} ${styles.right}`}>
-                      <div
-                        className={`${styles.innerArrow} ${styles.right}`}
-                      ></div>
-                    </div>
-                  </a>
-
-                  // <Link href={getNextOrPreviousUrl("right") || ""}>
-                  //   <div className={`${styles.arrow} ${styles.right}`}>
-                  //     <div
-                  //       className={`${styles.innerArrow} ${styles.right}`}
-                  //     ></div>
-                  //   </div>
-                  // </Link>
-                )}
-              </>
-            )}
-            {/* </AnimatePresence> */}
-          </Overlay>
-          <HomeSplash />
-        </main>
-      </AnimatePresence>
+              {galleryItem.next && (
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSlideChangeDirection("right");
+                  }}
+                >
+                  <div className={`${styles.arrow} ${styles.right}`}>
+                    <div
+                      className={`${styles.innerArrow} ${styles.right}`}
+                    ></div>
+                  </div>
+                </a>
+              )}
+            </>
+          )}
+        </Overlay>
+        <HomeSplash />
+      </main>
     </>
   );
 }
