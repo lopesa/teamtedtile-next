@@ -87,15 +87,22 @@ export default function GalleryItem({ galleryItem }: props) {
    * ---------------- DRAGGING ----------------
    */
   const onDrag = (e: MouseEvent, info: PanInfo) => {
-    const { point, delta, offset, velocity } = info;
+    // const { point, delta, offset, velocity } = info;
+    const { delta } = info;
     x.set(x.get() + delta.x);
   };
 
   const onDragEnd = (e: MouseEvent, info: PanInfo) => {
-    const { point, delta, offset, velocity } = info;
-    const OFFSET_THRESHOLD = 150;
+    const { offset, velocity } = info;
+    const OFFSET_THRESHOLD = 100;
+    const VELOCITY_THRESHOLD = 75;
 
-    if (!(Math.abs(offset.x) > OFFSET_THRESHOLD)) {
+    console.log("velocity.x", velocity.x);
+
+    if (
+      Math.abs(offset.x) < OFFSET_THRESHOLD &&
+      Math.abs(velocity.x) < VELOCITY_THRESHOLD
+    ) {
       x.jump(-width);
       return;
     }
@@ -115,6 +122,7 @@ export default function GalleryItem({ galleryItem }: props) {
     if (frameRef.current !== null) {
       setHeight(frameRef.current.offsetHeight);
       setWidth(frameRef.current.offsetWidth);
+      x.set(-frameRef.current.offsetWidth);
     }
   }, [router.asPath, windowSize]);
 
@@ -127,7 +135,6 @@ export default function GalleryItem({ galleryItem }: props) {
    */
   useEffect(() => {
     setImagesContainerWidth(3 * width);
-    x.set(-width);
   }, [width]);
 
   /**
@@ -193,7 +200,7 @@ export default function GalleryItem({ galleryItem }: props) {
                         display: "flex",
                         x,
                       }}
-                      initial={{ x: `${-width}px` }}
+                      initial={{ x: x.get() }}
                       exit={{
                         x: `${
                           slideChangeDirection === "left"
