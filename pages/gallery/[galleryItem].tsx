@@ -13,6 +13,8 @@ import Overlay from "components/overlay";
 import { RefObject, useEffect, useRef, useState } from "react";
 import useEscGoesToRoute from "hooks/useEscGoesToRoute";
 import StrapiImage from "components/StrapiImage";
+import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 // import PageHead from "components/PageHead";
 
 interface props {
@@ -27,14 +29,15 @@ export default function GalleryItem({ galleryItem }: props) {
 
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
+  const [slideChangeDirection, setSlideChangeDirection] = useState<
+    "left" | "right" | "none"
+  >("none");
 
   const [imagesContainerWidth, setImagesContainerWidth] = useState(0);
   const [imagesContainerTranslateX, setImagesContainerTranslateX] = useState(0);
 
   const BASE_GALLERY_TRANSITION = "transform 0.5s ease-in-out";
   const [baseGalleryTransition, setBaseGalleryTransition] = useState("none");
-
-  // const [isPopState, setIsPopState] = useState(false);
 
   const getSameImagesState = (
     galleryItem: IGalleryItem["attributes"] | null
@@ -64,7 +67,8 @@ export default function GalleryItem({ galleryItem }: props) {
     };
   };
 
-  const [images, setImages] = useState(getSameImagesState(galleryItem));
+  // const [images, setImages] = useState(getSameImagesState(galleryItem));
+  const [images, setImages] = useState(getFinalImagesState(galleryItem));
 
   const getNextOrPreviousUrl = (direction: "left" | "right") => {
     if (
@@ -91,15 +95,17 @@ export default function GalleryItem({ galleryItem }: props) {
       return;
     }
 
-    const transitionEndFunction = () => {
-      elRef?.current?.removeEventListener(
-        "transitionend",
-        transitionEndFunction
-      );
-      router.push(goToUrl);
-    };
-    elRef?.current?.addEventListener("transitionend", transitionEndFunction);
-    setImagesContainerTranslateX(direction === "left" ? 0 : -2 * width);
+    router.push(goToUrl);
+
+    // const transitionEndFunction = () => {
+    //   elRef?.current?.removeEventListener(
+    //     "transitionend",
+    //     transitionEndFunction
+    //   );
+    //   router.push(goToUrl);
+    // };
+    // elRef?.current?.addEventListener("transitionend", transitionEndFunction);
+    // setImagesContainerTranslateX(direction === "left" ? 0 : -2 * width);
   };
 
   useEscGoesToRoute("/gallery");
@@ -112,7 +118,6 @@ export default function GalleryItem({ galleryItem }: props) {
       setHeight(frameRef.current.offsetHeight);
       setWidth(frameRef.current.offsetWidth);
     }
-    setBaseGalleryTransition("none");
   }, [router.asPath]);
 
   // listens to width and sets initial slide width on instantiation
@@ -120,66 +125,60 @@ export default function GalleryItem({ galleryItem }: props) {
     setImagesContainerWidth(3 * width);
   }, [width]);
 
-  // prepare slide to reset position
   useEffect(() => {
-    if (baseGalleryTransition === "none") {
-      galleryItem && setImages(getSameImagesState(galleryItem));
-    }
-  }, [baseGalleryTransition, galleryItem]);
-  // }, [baseGalleryTransition, galleryItem, isPopState]);
-
-  // this does not happen currently. Debuggers are never hit
-  // useEffect(() => {
-  //   const handleRouteChangeComplete = () => {
-  //     if (isPopState) {
-  //       debugger;
-  //       router.reload();
-  //     }
-  //     setIsPopState(false);
-  //   };
-  //   router.events.on("routeChangeComplete", handleRouteChangeComplete);
-
-  //   router.beforePopState(() => {
-  //     debugger;
-  //     setIsPopState(true);
-  //     return true;
-  //   });
-
-  //   return () => {
-  //     router.events.off("routeChangeComplete", handleRouteChangeComplete);
-  //   };
-  // }, [router, isPopState]);
+    // debugger;
+    setImages(getFinalImagesState(galleryItem));
+    setSlideChangeDirection("none");
+  }, [galleryItem]);
 
   useEffect(() => {
-    if (!images) {
+    if (slideChangeDirection === "none") {
       return;
     }
-    if (images.rightImageSrc === images.centerImageSrc) {
-      if (imagesContainerTranslateX !== -width) {
-        setImagesContainerTranslateX(-width);
-        return;
-      }
-      if (
-        imagesContainerTranslateX === -width &&
-        slideRef.current?.clientWidth !== 0
-      ) {
-        galleryItem && setImages(getFinalImagesState(galleryItem));
-      }
+    const goToUrl = getNextOrPreviousUrl(slideChangeDirection);
+    if (!goToUrl) {
+      return;
     }
+    router.push(goToUrl);
+  }, [slideChangeDirection]);
 
-    if (
-      images.rightImageSrc !== images.centerImageSrc &&
-      imagesContainerTranslateX === -width
-    ) {
-      setBaseGalleryTransition(BASE_GALLERY_TRANSITION);
-    }
-  }, [
-    images,
-    imagesContainerTranslateX,
-    galleryItem,
-    width,
-    baseGalleryTransition,
-  ]);
+  // prepare slide to reset position
+  // useEffect(() => {
+  //   if (baseGalleryTransition === "none") {
+  //     galleryItem && setImages(getSameImagesState(galleryItem));
+  //   }
+  // }, [baseGalleryTransition, galleryItem]);
+
+  // useEffect(() => {
+  //   if (!images) {
+  //     return;
+  //   }
+  //   if (images.rightImageSrc === images.centerImageSrc) {
+  //     if (imagesContainerTranslateX !== -width) {
+  //       setImagesContainerTranslateX(-width);
+  //       return;
+  //     }
+  //     if (
+  //       imagesContainerTranslateX === -width &&
+  //       slideRef.current?.clientWidth !== 0
+  //     ) {
+  //       galleryItem && setImages(getFinalImagesState(galleryItem));
+  //     }
+  //   }
+
+  //   if (
+  //     images.rightImageSrc !== images.centerImageSrc &&
+  //     imagesContainerTranslateX === -width
+  //   ) {
+  //     setBaseGalleryTransition(BASE_GALLERY_TRANSITION);
+  //   }
+  // }, [
+  //   images,
+  //   imagesContainerTranslateX,
+  //   galleryItem,
+  //   width,
+  //   baseGalleryTransition,
+  // ]);
 
   // const getGalleryMeta = () => {
   //   return `gallery -- ${getGalleryTitleFromUrlString(router.asPath)?.slice(
@@ -189,26 +188,67 @@ export default function GalleryItem({ galleryItem }: props) {
   return (
     <>
       {/* <PageHead metaContent={getGalleryMeta()} /> */}
-      <main>
-        <Overlay>
-          {galleryItem && (
-            <>
-              {galleryItem.previous && (
-                <a
-                  onClick={(e) => {
-                    e.preventDefault();
-                    doSlideAnimationThenChangeRoutes("left", slideRef);
-                  }}
-                >
-                  <div className={`${styles.arrow} ${styles.left}`}>
-                    <div
-                      className={`${styles.innerArrow} ${styles.left}`}
-                    ></div>
-                  </div>
-                </a>
-              )}
-              <div ref={frameRef} className={styles.imageFrame}>
-                <div
+      <AnimatePresence mode="wait">
+        <main key={router.asPath}>
+          <Overlay>
+            {/* <AnimatePresence mode="wait" initial={false}> */}
+            {/* <AnimatePresence mode="wait"> */}
+            {galleryItem && (
+              <>
+                {galleryItem.previous && (
+                  <a
+                    onClick={(e) => {
+                      // e.preventDefault();
+                      setSlideChangeDirection("left");
+                      // doSlideAnimationThenChangeRoutes("left", slideRef);
+                    }}
+                  >
+                    <div className={`${styles.arrow} ${styles.left}`}>
+                      <div
+                        className={`${styles.innerArrow} ${styles.left}`}
+                      ></div>
+                    </div>
+                  </a>
+                  // <Link href={getNextOrPreviousUrl("left") || ""}>
+                  //   <div className={`${styles.arrow} ${styles.left}`}>
+                  //     <div
+                  //       className={`${styles.innerArrow} ${styles.left}`}
+                  //     ></div>
+                  //   </div>
+                  // </Link>
+                )}
+                <div ref={frameRef} className={styles.imageFrame}>
+                  {/* <AnimatePresence mode="wait" initial={false}> */}
+                  {width && (
+                    <motion.div
+                      ref={slideRef}
+                      // key={router.asPath}
+                      key="constant"
+                      exit={{
+                        // opacity: 0,
+                        // transition: { duration: 5 },
+                        x: `${
+                          slideChangeDirection === "left"
+                            ? 0
+                            : `${-2 * width}px`
+
+                          // slideChangeDirection === "left"
+                          //   ? `${-2 * width}px`
+                          //   : 0
+                          // slideChangeDirection === "left" ? "-100px" : 0
+                          // slideChangeDirection === "left" ? 0 : -2 * width
+                        }`,
+                      }}
+                      // initial={{ translateX: `-150px` }}
+                      initial={{ x: `${-width}px` }}
+                      style={{
+                        width: `${imagesContainerWidth}px`,
+                        height: "100%",
+                        display: "flex",
+                        // translateX: `${-width}px`,
+                      }}
+                    >
+                      {/* <div
                   ref={slideRef}
                   className={styles.imagesContainer}
                   style={{
@@ -216,56 +256,70 @@ export default function GalleryItem({ galleryItem }: props) {
                     transform: `translateX(${imagesContainerTranslateX}px)`,
                     transition: baseGalleryTransition,
                   }}
-                >
-                  <StrapiImage
-                    src={images?.leftImageSrc || ""}
-                    alt=""
-                    width={width}
-                    height={height}
-                    style={{ objectFit: "contain" }}
-                    priority
-                    isSlide
-                  />
-                  <StrapiImage
-                    src={images?.centerImageSrc || ""}
-                    alt=""
-                    width={width}
-                    height={height}
-                    style={{ objectFit: "contain" }}
-                    priority
-                    isSlide
-                  />
-                  <StrapiImage
-                    src={images?.rightImageSrc || ""}
-                    alt=""
-                    width={width}
-                    height={height}
-                    style={{ objectFit: "contain" }}
-                    priority
-                    isSlide
-                  />
+                > */}
+                      <StrapiImage
+                        src={images?.leftImageSrc || ""}
+                        alt=""
+                        width={width}
+                        height={height}
+                        style={{ objectFit: "contain" }}
+                        priority
+                        isSlide
+                      />
+                      <StrapiImage
+                        src={images?.centerImageSrc || ""}
+                        alt=""
+                        width={width}
+                        height={height}
+                        style={{ objectFit: "contain" }}
+                        priority
+                        isSlide
+                      />
+                      <StrapiImage
+                        src={images?.rightImageSrc || ""}
+                        alt=""
+                        width={width}
+                        height={height}
+                        style={{ objectFit: "contain" }}
+                        priority
+                        isSlide
+                      />
+                    </motion.div>
+                  )}
+                  {/* </AnimatePresence> */}
+                  {/* </div> */}
                 </div>
-              </div>
 
-              {galleryItem.next && (
-                <a
-                  onClick={(e) => {
-                    e.preventDefault();
-                    doSlideAnimationThenChangeRoutes("right", slideRef);
-                  }}
-                >
-                  <div className={`${styles.arrow} ${styles.right}`}>
-                    <div
-                      className={`${styles.innerArrow} ${styles.right}`}
-                    ></div>
-                  </div>
-                </a>
-              )}
-            </>
-          )}
-        </Overlay>
-        <HomeSplash />
-      </main>
+                {galleryItem.next && (
+                  <a
+                    onClick={(e) => {
+                      // e.preventDefault();
+                      setSlideChangeDirection("right");
+                      // doSlideAnimationThenChangeRoutes("right", slideRef);
+                    }}
+                  >
+                    <div className={`${styles.arrow} ${styles.right}`}>
+                      <div
+                        className={`${styles.innerArrow} ${styles.right}`}
+                      ></div>
+                    </div>
+                  </a>
+
+                  // <Link href={getNextOrPreviousUrl("right") || ""}>
+                  //   <div className={`${styles.arrow} ${styles.right}`}>
+                  //     <div
+                  //       className={`${styles.innerArrow} ${styles.right}`}
+                  //     ></div>
+                  //   </div>
+                  // </Link>
+                )}
+              </>
+            )}
+            {/* </AnimatePresence> */}
+          </Overlay>
+          <HomeSplash />
+        </main>
+      </AnimatePresence>
     </>
   );
 }
