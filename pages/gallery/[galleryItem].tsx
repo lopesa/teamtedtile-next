@@ -10,17 +10,16 @@ import styles from "styles/GalleryItem.module.scss";
 import Head from "next/head";
 import HomeSplash from "components/homeSplash";
 import Overlay from "components/overlay";
-import { RefObject, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useEscGoesToRoute from "hooks/useEscGoesToRoute";
 import StrapiImage from "components/StrapiImage";
 import {
   AnimatePresence,
-  EventInfo,
   PanInfo,
   motion,
   useMotionValue,
 } from "framer-motion";
-import Link from "next/link";
+import useWindowSize from "hooks/useWindowSize";
 // import PageHead from "components/PageHead";
 
 interface props {
@@ -42,6 +41,7 @@ export default function GalleryItem({ galleryItem }: props) {
   >("none");
 
   const [imagesContainerWidth, setImagesContainerWidth] = useState(0);
+  const windowSize = useWindowSize();
 
   const getImageData = (
     galleryItem: IGalleryItem["attributes"] | null | undefined
@@ -116,7 +116,7 @@ export default function GalleryItem({ galleryItem }: props) {
       setHeight(frameRef.current.offsetHeight);
       setWidth(frameRef.current.offsetWidth);
     }
-  }, [router.asPath]);
+  }, [router.asPath, windowSize]);
 
   /**
    * listens to width and sets initial slide width on instantiation
