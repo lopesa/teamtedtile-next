@@ -28,6 +28,7 @@ interface props {
 
 export default function GalleryItem({ galleryItem }: props) {
   const router = useRouter();
+  const [routeChangeInProgress, setRouteChangeInProgress] = useState(false);
 
   const frameRef = useRef<HTMLDivElement>(null);
   const slideRef = useRef<HTMLDivElement>(null);
@@ -88,6 +89,9 @@ export default function GalleryItem({ galleryItem }: props) {
    */
   const onDrag = (e: MouseEvent, info: PanInfo) => {
     // const { point, delta, offset, velocity } = info;
+    if (routeChangeInProgress) {
+      return;
+    }
     const { delta } = info;
     x.set(x.get() + delta.x);
   };
@@ -160,6 +164,11 @@ export default function GalleryItem({ galleryItem }: props) {
     if (!goToUrl) {
       return;
     }
+    setRouteChangeInProgress(true);
+    const id = setTimeout(() => {
+      setRouteChangeInProgress(false);
+      clearTimeout(id);
+    }, 750);
     router.push(goToUrl);
   }, [slideChangeDirection]);
 
@@ -173,6 +182,9 @@ export default function GalleryItem({ galleryItem }: props) {
               {galleryItem.previous && (
                 <a
                   onClick={(e) => {
+                    if (routeChangeInProgress) {
+                      return;
+                    }
                     e.preventDefault();
                     setSlideChangeDirection("left");
                   }}
@@ -207,6 +219,7 @@ export default function GalleryItem({ galleryItem }: props) {
                             ? 0
                             : `${-2 * width}px`
                         }`,
+                        transition: { duration: 0.3 },
                       }}
                       drag="x"
                       onDrag={onDrag}
@@ -247,6 +260,9 @@ export default function GalleryItem({ galleryItem }: props) {
               {galleryItem.next && (
                 <a
                   onClick={(e) => {
+                    if (routeChangeInProgress) {
+                      return;
+                    }
                     e.preventDefault();
                     setSlideChangeDirection("right");
                   }}
