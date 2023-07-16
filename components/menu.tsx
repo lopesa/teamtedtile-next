@@ -7,7 +7,7 @@ import PageScrollSpy from "./PageScrollSpy";
 
 type MenuProps = {
   backgroundColor?: string;
-  position?: "fixed" | "absolute";
+  position?: "fixed" | "sticky";
   triggerElementRef?: React.RefObject<HTMLElement>;
 };
 
