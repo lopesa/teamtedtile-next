@@ -164,7 +164,7 @@ export default function GalleryItem({ galleryItem }: props) {
    * this listens for that change and then changes the route
    */
   useEffect(() => {
-    if (slideChangeDirection === "none") {
+    if (slideChangeDirection === "none" || routeChangeInProgress) {
       return;
     }
     const goToUrl = getNextOrPreviousUrl(slideChangeDirection);
