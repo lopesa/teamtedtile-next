@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import "../styles/globals.scss";
 import Menu from "components/menu";
-import HomeSplash from "@components/homeSplash";
 import Script from "next/script";
 
 export default function RootLayout({
@@ -33,8 +32,7 @@ export default function RootLayout({
       </head>
       <body>
         <Menu triggerElementRef={menuTriggerRef} position="fixed" />
-        <HomeSplash />
-        <div ref={menuTriggerRef} />
+        <div ref={menuTriggerRef} style={{ position: "fixed", top: "40vh" }} />
         {children}
       </body>
     </html>

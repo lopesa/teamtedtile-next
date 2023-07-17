@@ -4,7 +4,7 @@ import Menu from "components/menu";
 import ScrollGallery from "components/ScrollGallery";
 import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
 import { getApiUrlBase } from "utils/GeneralUtils";
-import { RefObject, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import BusinessCard from "components/BusinessCard";
 // import PageHead from "components/PageHead";
 
@@ -20,28 +20,34 @@ interface HomeGalleryProps {
 }
 
 export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
-  const scrollGalleryRef = useRef<HTMLElement>(null);
-  const scrollGalleryRefIntoView = (
-    scrollGalleryRefPass: RefObject<HTMLElement>
-  ) => {
-    scrollGalleryRefPass?.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollGalleryRef = useRef<HTMLDivElement>(null);
+  const menuTriggerRef = useRef<HTMLDivElement>(null);
+  const scrollGalleryRefIntoView = () => {
+    if (!scrollGalleryRef?.current) {
+      return;
+    }
+    scrollGalleryRef?.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const [menuScrolledPast, setMenuScrolledPast] = useState(false);
+
   return (
     <>
       {/* <PageHead metaContent="Gallery" /> */}
 
-      <Menu position="fixed" />
+      <Menu triggerElementRef={menuTriggerRef} position="fixed" />
+      <div ref={menuTriggerRef} style={{ position: "fixed", top: "40vh" }} />
       <main>
-        {/* <HomeSplash setIsScrolledPastHomeSplash={setMenuScrolledPast} /> */}
         <HomeSplash />
-        <ScrollGallery
+        <div
           ref={scrollGalleryRef}
+          style={{
+            position: "absolute",
+            bottom: 0,
+          }}
+        />
+        <ScrollGallery
           images={images}
           notFound={notFound}
-          onLayoutSetMethods={[
-            scrollGalleryRefIntoView.bind(HomeGallery, scrollGalleryRef),
-          ]}
+          onLayoutSetMethods={[scrollGalleryRefIntoView]}
         />
         <BusinessCard />
       </main>

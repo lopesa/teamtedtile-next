@@ -28,10 +28,11 @@ interface ScrollGalleryProps {
 
 // for info on the strange declaration syntax see below
 // https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/display-name.md
-const ScrollGallery = forwardRef(function ScrollGallery(
-  { images, notFound, onLayoutSetMethods }: ScrollGalleryProps,
-  ref: Ref<HTMLElement> | undefined
-) {
+const ScrollGallery = ({
+  images,
+  notFound,
+  onLayoutSetMethods,
+}: ScrollGalleryProps) => {
   const [initialLayoutSet, setInitialLayoutSet] = useState(false);
   const [layoutSetMethodsExectuted, setLayoutSetMethodsExectuted] =
     useState(false);
@@ -104,7 +105,7 @@ const ScrollGallery = forwardRef(function ScrollGallery(
   ]);
 
   return (
-    <section ref={ref} className={styles.scrollGalleryContainer}>
+    <section className={styles.scrollGalleryContainer}>
       {notFound && <h1>Images Not Found</h1>}
       {!notFound && galleryLayoutInfo && (
         <div
@@ -145,6 +146,6 @@ const ScrollGallery = forwardRef(function ScrollGallery(
       )}
     </section>
   );
-});
+};
 
 export default ScrollGallery;
