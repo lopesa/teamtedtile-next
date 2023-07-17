@@ -14,3 +14,19 @@ export const getGalleryImages = async (): Promise<{
     return { props: { images: [], notFound: true } };
   }
 };
+
+export const getImageData = (
+  galleryItem: IGalleryItem["attributes"] | null | undefined
+) => {
+  return {
+    leftImageSrc: galleryItem?.previous?.image?.url
+      ? `${getApiUrlBase()}${galleryItem?.previous?.image.url}`
+      : "",
+    centerImageSrc: galleryItem?.image?.data?.attributes?.url
+      ? `${getApiUrlBase()}${galleryItem?.image?.data?.attributes?.url}`
+      : "",
+    rightImageSrc: galleryItem?.next?.image?.url
+      ? `${getApiUrlBase()}${galleryItem?.next?.image?.url}`
+      : "",
+  };
+};

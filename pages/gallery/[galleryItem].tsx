@@ -11,7 +11,6 @@ import Head from "next/head";
 import HomeSplash from "components/homeSplash";
 import Overlay from "components/overlay";
 import { useEffect, useRef, useState } from "react";
-import useEscGoesToRoute from "hooks/useEscGoesToRoute";
 import StrapiImage from "components/StrapiImage";
 import {
   AnimatePresence,
@@ -20,6 +19,8 @@ import {
   useMotionValue,
 } from "framer-motion";
 import useWindowSize from "hooks/useWindowSize";
+import KeyActions from "@components/KeyActions";
+import { getImageData } from "utils/APIUtils";
 // import PageHead from "components/PageHead";
 
 interface props {
@@ -43,22 +44,6 @@ export default function GalleryItem({ galleryItem }: props) {
 
   const [imagesContainerWidth, setImagesContainerWidth] = useState(0);
   const windowSize = useWindowSize();
-
-  const getImageData = (
-    galleryItem: IGalleryItem["attributes"] | null | undefined
-  ) => {
-    return {
-      leftImageSrc: galleryItem?.previous?.image?.url
-        ? `${getApiUrlBase()}${galleryItem?.previous?.image.url}`
-        : "",
-      centerImageSrc: galleryItem?.image?.data?.attributes?.url
-        ? `${getApiUrlBase()}${galleryItem?.image?.data?.attributes?.url}`
-        : "",
-      rightImageSrc: galleryItem?.next?.image?.url
-        ? `${getApiUrlBase()}${galleryItem?.next?.image?.url}`
-        : "",
-    };
-  };
 
   const [images, setImages] = useState(getImageData(galleryItem));
 
@@ -116,12 +101,34 @@ export default function GalleryItem({ galleryItem }: props) {
       setSlideChangeDirection("right");
     }
   };
+
   /**
-   * ---------------- END DRAGGING ----------------
+   * ---------------- KEY ACTION DEFS ----------------
+   */
+  const onEscapeKey = () => {
+    router.push("/gallery");
+  };
+  const onRightArrowKey = () => {
+    if (routeChangeInProgress) {
+      return;
+    }
+    setSlideChangeDirection("right");
+  };
+  const onLeftArrowKey = () => {
+    if (routeChangeInProgress) {
+      return;
+    }
+    setSlideChangeDirection("left");
+  };
+
+  /**
+   * ---------------- EFFECTS ----------------
    */
 
-  useEscGoesToRoute("/gallery");
-
+  /**
+   * listens to routechanges and windowSize
+   * this is essentially "init"
+   */
   useEffect(() => {
     if (frameRef.current !== null) {
       setHeight(frameRef.current.offsetHeight);
@@ -175,6 +182,11 @@ export default function GalleryItem({ galleryItem }: props) {
   return (
     <>
       {/* <PageHead metaContent={getGalleryMeta()} /> */}
+      <KeyActions
+        onLeft={onLeftArrowKey}
+        onRight={onRightArrowKey}
+        onEsc={onEscapeKey}
+      />
       <main>
         <Overlay>
           {galleryItem && (
