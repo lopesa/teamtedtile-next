@@ -1,20 +1,20 @@
 import { useHotkeys } from "react-hotkeys-hook";
 
 type KeyActionsProps = {
-  onLeft: () => void;
-  onRight: () => void;
-  onEsc: () => void;
+  onLeft?: () => void;
+  onRight?: () => void;
+  onEsc?: () => void;
 };
 
 const KeyActions = ({ onLeft, onRight, onEsc }: KeyActionsProps) => {
   useHotkeys("left", () => {
-    onLeft();
+    onLeft?.();
   });
   useHotkeys("right", () => {
-    onRight();
+    onRight?.();
   });
   useHotkeys("esc", () => {
-    onEsc();
+    onEsc?.();
   });
 
   return <></>;
