@@ -4,16 +4,20 @@ import { PropsWithChildren, useState } from "react";
 import styles from "styles/menu.module.scss";
 import ActiveLink from "./activeLink";
 import PageScrollSpy from "./PageScrollSpy";
+import TTT_Logo from "public/images/ttt_logo.png";
+import Image from "next/image";
 
 type MenuProps = {
   backgroundColor?: string;
   position?: "fixed" | "sticky";
+  showLogo?: boolean;
   triggerElementRef?: React.RefObject<HTMLElement>;
 };
 
 export default function Menu({
   backgroundColor,
   position,
+  showLogo,
   triggerElementRef,
 }: PropsWithChildren<MenuProps>) {
   const [menuScrolledPast, setMenuScrolledPast] = useState(false);
@@ -26,6 +30,11 @@ export default function Menu({
         style={{ backgroundColor: backgroundColor, position: position }}
       >
         <ul>
+          {showLogo && (
+            <li className={styles.logoContainer}>
+              <Image src={TTT_Logo} alt="Team Ted Tile Logo" fill={true} />
+            </li>
+          )}
           <li>
             <ActiveLink
               activeClassName={styles.active}

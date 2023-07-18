@@ -31,7 +31,11 @@ export default function RootLayout({
         </Script>
       </head>
       <body>
-        <Menu triggerElementRef={menuTriggerRef} position="fixed" />
+        <Menu
+          triggerElementRef={menuTriggerRef}
+          position="fixed"
+          showLogo={true}
+        />
         <div ref={menuTriggerRef} style={{ position: "fixed", top: "40vh" }} />
         {children}
       </body>

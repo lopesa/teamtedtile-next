@@ -35,6 +35,14 @@
     margin: 0;
   }
 
+  .logoContainer {
+    position: relative;
+    width: 26px;
+    height: 26px;
+    margin-right: 10px;
+    background-color: $white;
+  }
+
   .category {
     height: 100%;
     padding: 12px 8px 4px;

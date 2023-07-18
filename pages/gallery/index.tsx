@@ -4,15 +4,9 @@ import Menu from "components/menu";
 import ScrollGallery from "components/ScrollGallery";
 import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
 import { getApiUrlBase } from "utils/GeneralUtils";
-import { RefObject, useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import BusinessCard from "components/BusinessCard";
 // import PageHead from "components/PageHead";
-
-/**
- * this page and the index are duped code mostly but I am seeing that
- * it's not wise to refactor out the getStaticProps call to a common place
- * think about just factoring out the core of it later
- */
 
 interface HomeGalleryProps {
   images: IGalleryItem[];
@@ -33,7 +27,11 @@ export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
     <>
       {/* <PageHead metaContent="Gallery" /> */}
 
-      <Menu triggerElementRef={menuTriggerRef} position="fixed" />
+      <Menu
+        triggerElementRef={menuTriggerRef}
+        position="fixed"
+        showLogo={true}
+      />
       <div ref={menuTriggerRef} style={{ position: "fixed", top: "40vh" }} />
       <main>
         <HomeSplash />
