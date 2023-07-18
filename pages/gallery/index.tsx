@@ -6,7 +6,7 @@ import { IGalleryItemsResponse, IGalleryItem } from "interfaces/gallery";
 import { getApiUrlBase } from "utils/GeneralUtils";
 import { useRef } from "react";
 import BusinessCard from "components/BusinessCard";
-// import PageHead from "components/PageHead";
+import PageHead from "components/PageHead";
 
 interface HomeGalleryProps {
   images: IGalleryItem[];
@@ -25,7 +25,7 @@ export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
 
   return (
     <>
-      {/* <PageHead metaContent="Gallery" /> */}
+      <PageHead metaContent="Gallery" />
 
       <Menu
         triggerElementRef={menuTriggerRef}

@@ -21,7 +21,7 @@ import {
 import useWindowSize from "hooks/useWindowSize";
 import KeyActions from "@components/KeyActions";
 import { getImageData } from "utils/APIUtils";
-// import PageHead from "components/PageHead";
+import PageHead from "components/PageHead";
 
 interface props {
   galleryItem: IGalleryItem["attributes"] | null;
@@ -63,11 +63,11 @@ export default function GalleryItem({ galleryItem }: props) {
     return `/gallery/${galleryItemUrl}`;
   };
 
-  // const getGalleryMeta = () => {
-  //   return `gallery -- ${getGalleryTitleFromUrlString(router.asPath)?.slice(
-  //     9
-  //   )}`;
-  // };
+  const getGalleryMeta = () => {
+    return `gallery -- ${getGalleryTitleFromUrlString(router.asPath)?.slice(
+      9
+    )}`;
+  };
 
   /**
    * ---------------- DRAGGING ----------------
@@ -181,7 +181,7 @@ export default function GalleryItem({ galleryItem }: props) {
 
   return (
     <>
-      {/* <PageHead metaContent={getGalleryMeta()} /> */}
+      <PageHead metaContent={getGalleryMeta()} />
       <KeyActions
         onLeft={onLeftArrowKey}
         onRight={onRightArrowKey}
