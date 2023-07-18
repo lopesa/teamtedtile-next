@@ -6,7 +6,12 @@ function BusinessCard() {
     <div className={styles.businessCard}>
       <div className={styles.cardContainer}>
         <div className={styles.imageHolder}>
-          <Image src={TTT_Logo} alt="Team Ted Tile Logo" fill={true} />
+          <Image
+            src={TTT_Logo}
+            alt="Team Ted Tile Logo"
+            fill={true}
+            sizes="26px"
+          />
         </div>
         <div className={styles.copy}>
           <div className={`${styles.ital} ${styles.large}`}>

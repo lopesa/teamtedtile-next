@@ -81,6 +81,7 @@ const StrapiImage = ({
           style={style}
           priority={priority}
           onLoad={onLoad}
+          unoptimized={true}
         />
       )}
       {useBaseImage && (
