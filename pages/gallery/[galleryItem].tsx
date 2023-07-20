@@ -76,8 +76,27 @@ export default function GalleryItem({ galleryItem }: props) {
     if (routeChangeInProgress) {
       return;
     }
+
     const { delta } = info;
     x.set(x.get() + delta.x);
+  };
+
+  const getDragConstraints = () => {
+    const firstSlideConstraints = { left: -2 * width, right: -width };
+    const lastSlideConstraints = { left: -width, right: 0 };
+    const middleSlideConstraints = { left: -2 * width, right: 0 };
+
+    const leftSlideUrl = getNextOrPreviousUrl("left");
+    if (!leftSlideUrl) {
+      return firstSlideConstraints;
+    }
+
+    const rightSlideUrl = getNextOrPreviousUrl("right");
+    if (!rightSlideUrl) {
+      return lastSlideConstraints;
+    }
+
+    return middleSlideConstraints;
   };
 
   const onDragEnd = (e: MouseEvent, info: PanInfo) => {
@@ -186,7 +205,7 @@ export default function GalleryItem({ galleryItem }: props) {
       if (frameRef.current !== null) {
         x.set(-frameRef.current.offsetWidth);
       }
-    }, 750);
+    }, 500);
     router.push(goToUrl);
   }, [slideChangeDirection]);
 
@@ -242,10 +261,10 @@ export default function GalleryItem({ galleryItem }: props) {
                             ? 0
                             : `${-2 * width}px`
                         }`,
-                        transition: { duration: 0.3 },
+                        transition: { duration: 0.7 },
                       }}
                       drag="x"
-                      dragConstraints={{ left: -2 * width, right: 0 }}
+                      dragConstraints={getDragConstraints()}
                       onDrag={onDrag}
                       onDragEnd={onDragEnd}
                       dragElastic={false}
