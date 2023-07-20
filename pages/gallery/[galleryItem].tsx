@@ -7,7 +7,6 @@ import {
 } from "utils/GeneralUtils";
 import { GetStaticPaths, GetStaticProps } from "next";
 import styles from "styles/GalleryItem.module.scss";
-import Head from "next/head";
 import HomeSplash from "components/homeSplash";
 import Overlay from "components/overlay";
 import { useEffect, useRef, useState } from "react";
@@ -82,11 +81,13 @@ export default function GalleryItem({ galleryItem }: props) {
   };
 
   const onDragEnd = (e: MouseEvent, info: PanInfo) => {
+    if (routeChangeInProgress) {
+      return;
+    }
+
     const { offset, velocity } = info;
     const OFFSET_THRESHOLD = 100;
     const VELOCITY_THRESHOLD = 75;
-
-    console.log("velocity.x", velocity.x);
 
     if (
       Math.abs(offset.x) < OFFSET_THRESHOLD &&
@@ -95,6 +96,7 @@ export default function GalleryItem({ galleryItem }: props) {
       x.jump(-width);
       return;
     }
+
     if (offset.x > 0) {
       setSlideChangeDirection("left");
     } else {
@@ -133,7 +135,6 @@ export default function GalleryItem({ galleryItem }: props) {
     if (frameRef.current !== null) {
       setHeight(frameRef.current.offsetHeight);
       setWidth(frameRef.current.offsetWidth);
-      x.set(-frameRef.current.offsetWidth);
     }
   }, [router.asPath, windowSize]);
 
@@ -146,6 +147,9 @@ export default function GalleryItem({ galleryItem }: props) {
    */
   useEffect(() => {
     setImagesContainerWidth(3 * width);
+    if (frameRef.current !== null) {
+      x.set(-frameRef.current.offsetWidth);
+    }
   }, [width]);
 
   /**
@@ -172,9 +176,16 @@ export default function GalleryItem({ galleryItem }: props) {
       return;
     }
     setRouteChangeInProgress(true);
+
+    // @TODO. This sucks, hate the timeout
+    // but listening on any animation end events seems to not work
     const id = setTimeout(() => {
       setRouteChangeInProgress(false);
       clearTimeout(id);
+
+      if (frameRef.current !== null) {
+        x.set(-frameRef.current.offsetWidth);
+      }
     }, 750);
     router.push(goToUrl);
   }, [slideChangeDirection]);
@@ -234,8 +245,10 @@ export default function GalleryItem({ galleryItem }: props) {
                         transition: { duration: 0.3 },
                       }}
                       drag="x"
+                      dragConstraints={{ left: -2 * width, right: 0 }}
                       onDrag={onDrag}
                       onDragEnd={onDragEnd}
+                      dragElastic={false}
                     >
                       <StrapiImage
                         src={images?.leftImageSrc || ""}
