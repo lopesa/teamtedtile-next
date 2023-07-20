@@ -27,6 +27,8 @@ interface props {
 }
 
 export default function GalleryItem({ galleryItem }: props) {
+  const SLIDE_CHANGE_DURATION = 0.5;
+
   const router = useRouter();
   const [routeChangeInProgress, setRouteChangeInProgress] = useState(false);
 
@@ -71,16 +73,6 @@ export default function GalleryItem({ galleryItem }: props) {
   /**
    * ---------------- DRAGGING ----------------
    */
-  const onDrag = (e: MouseEvent, info: PanInfo) => {
-    // const { point, delta, offset, velocity } = info;
-    if (routeChangeInProgress) {
-      return;
-    }
-
-    const { delta } = info;
-    x.set(x.get() + delta.x);
-  };
-
   const getDragConstraints = () => {
     const firstSlideConstraints = { left: -2 * width, right: -width };
     const lastSlideConstraints = { left: -width, right: 0 };
@@ -97,6 +89,15 @@ export default function GalleryItem({ galleryItem }: props) {
     }
 
     return middleSlideConstraints;
+  };
+
+  const onDrag = (e: MouseEvent, info: PanInfo) => {
+    // const { point, delta, offset, velocity } = info;
+    if (routeChangeInProgress) {
+      return;
+    }
+    const { delta } = info;
+    x.set(x.get() + delta.x);
   };
 
   const onDragEnd = (e: MouseEvent, info: PanInfo) => {
@@ -196,8 +197,16 @@ export default function GalleryItem({ galleryItem }: props) {
     }
     setRouteChangeInProgress(true);
 
-    // @TODO. This sucks, hate the timeout
-    // but listening on any animation end events seems to not work
+    /**
+     * @TODO. This sucks, hate the timeout
+     * but listening on any animation end events seems to not work
+     * EDIT: still seems unelegant but now less egregious as I have a
+     * solid working solution but still relying on it.
+     * I now have the var SLIDE_CHANGE_DURATION and it has to be the same
+     * here in this timeout as it is in the motion.div exit transition
+     * this makes sense at least
+     */
+
     const id = setTimeout(() => {
       setRouteChangeInProgress(false);
       clearTimeout(id);
@@ -205,7 +214,7 @@ export default function GalleryItem({ galleryItem }: props) {
       if (frameRef.current !== null) {
         x.set(-frameRef.current.offsetWidth);
       }
-    }, 500);
+    }, SLIDE_CHANGE_DURATION * 1000);
     router.push(goToUrl);
   }, [slideChangeDirection]);
 
@@ -254,14 +263,15 @@ export default function GalleryItem({ galleryItem }: props) {
                         display: "flex",
                         x,
                       }}
-                      initial={{ x: x.get() }}
+                      // note: this initial is for first slide only
+                      initial={{ x: -width }}
                       exit={{
                         x: `${
                           slideChangeDirection === "left"
                             ? 0
                             : `${-2 * width}px`
                         }`,
-                        transition: { duration: 0.7 },
+                        transition: { duration: SLIDE_CHANGE_DURATION },
                       }}
                       drag="x"
                       dragConstraints={getDragConstraints()}
