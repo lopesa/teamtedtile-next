@@ -9,7 +9,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import styles from "styles/GalleryItem.module.scss";
 import HomeSplash from "components/homeSplash";
 import Overlay from "components/overlay";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import StrapiImage from "components/StrapiImage";
 import {
   AnimatePresence,
@@ -48,21 +48,25 @@ export default function GalleryItem({ galleryItem }: props) {
 
   const [images, setImages] = useState(getImageData(galleryItem));
 
-  const getNextOrPreviousUrl = (direction: "left" | "right") => {
-    if (
-      !galleryItem ||
-      (direction === "left" && !galleryItem.previous) ||
-      (direction === "right" && !galleryItem.next)
-    ) {
-      return;
-    }
-    const galleryItemUrl = getGalleryUrlStringFromTitle(
-      direction === "left"
-        ? galleryItem.previous!.title
-        : galleryItem.next!.title
-    );
-    return `/gallery/${galleryItemUrl}`;
-  };
+  // const getNextOrPreviousUrl = (direction: "left" | "right") => {
+  const getNextOrPreviousUrlAsCB = useCallback(
+    (direction: "left" | "right") => {
+      if (
+        !galleryItem ||
+        (direction === "left" && !galleryItem.previous) ||
+        (direction === "right" && !galleryItem.next)
+      ) {
+        return;
+      }
+      const galleryItemUrl = getGalleryUrlStringFromTitle(
+        direction === "left"
+          ? galleryItem.previous!.title
+          : galleryItem.next!.title
+      );
+      return `/gallery/${galleryItemUrl}`;
+    },
+    [galleryItem]
+  );
 
   const getGalleryMeta = () => {
     return `gallery -- ${getGalleryTitleFromUrlString(router.asPath)?.slice(
@@ -78,12 +82,12 @@ export default function GalleryItem({ galleryItem }: props) {
     const lastSlideConstraints = { left: -width, right: 0 };
     const middleSlideConstraints = { left: -2 * width, right: 0 };
 
-    const leftSlideUrl = getNextOrPreviousUrl("left");
+    const leftSlideUrl = getNextOrPreviousUrlAsCB("left");
     if (!leftSlideUrl) {
       return firstSlideConstraints;
     }
 
-    const rightSlideUrl = getNextOrPreviousUrl("right");
+    const rightSlideUrl = getNextOrPreviousUrlAsCB("right");
     if (!rightSlideUrl) {
       return lastSlideConstraints;
     }
@@ -170,7 +174,7 @@ export default function GalleryItem({ galleryItem }: props) {
     if (frameRef.current !== null) {
       x.set(-frameRef.current.offsetWidth);
     }
-  }, [width]);
+  }, [width, x]);
 
   /**
    * for slides after the inital one, have to reset these values
@@ -191,7 +195,7 @@ export default function GalleryItem({ galleryItem }: props) {
     if (slideChangeDirection === "none" || routeChangeInProgress) {
       return;
     }
-    const goToUrl = getNextOrPreviousUrl(slideChangeDirection);
+    const goToUrl = getNextOrPreviousUrlAsCB(slideChangeDirection);
     if (!goToUrl) {
       return;
     }
@@ -216,7 +220,13 @@ export default function GalleryItem({ galleryItem }: props) {
       }
     }, SLIDE_CHANGE_DURATION * 1000);
     router.push(goToUrl);
-  }, [slideChangeDirection]);
+  }, [
+    slideChangeDirection,
+    getNextOrPreviousUrlAsCB,
+    router,
+    x,
+    routeChangeInProgress,
+  ]);
 
   return (
     <>
