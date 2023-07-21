@@ -1,23 +1,32 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import "react-phone-number-input/style.css";
-import Input from "react-phone-number-input/input";
-import { isValidPhoneNumber, Value } from "react-phone-number-input";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input/input";
 import Toast from "components/Toast";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import styles from "styles/Contact.module.scss";
+
+type Inputs = {
+  email: string;
+  phone: string;
+  clientMessage: string;
+};
 
 export default function Contact() {
-  const [email, setEmail] = useState("");
-  const [telephone, setTelephone] = useState<Value>();
-  const [message, setMessage] = useState("");
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [phoneError, setPhoneError] = useState<string | null>(null);
   const [overallError, setOverallError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string>("");
   const SUBMIT_ENDPOINT = "send-mail";
 
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isValid },
+  } = useForm<Inputs>();
+
   const OVERALL_DATA_ERROR =
-    "Please enter a message and one way to contact you";
+    "Please enter a message and at least one way to contact you";
   const SUCESS_MESSAGE =
     "Your message was sent. Thanks for your interest! I'll contact you asap.";
   const FAILURE_MESSAGE =
@@ -27,37 +36,19 @@ export default function Contact() {
     return /\S+@\S+\.\S+/.test(email);
   };
 
-  const handleEmailChange = (event: React.FormEvent<HTMLInputElement>) => {
-    if (!isValidEmail(event.currentTarget.value)) {
-      setEmailError("Email is invalid");
-    } else {
-      setEmailError(null);
-    }
-    setEmail(event.currentTarget.value);
-  };
-  const handlePhoneBlur = (event: React.FormEvent<HTMLInputElement>) => {
-    if (!telephone || !isValidPhoneNumber(telephone)) {
-      setPhoneError("Phone is invalid");
-    } else {
-      setPhoneError(null);
-    }
-  };
-
   const closeToast = () => {
     setToastMessage("");
   };
 
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    const validPhone = telephone && isValidPhoneNumber(telephone);
-    const validEmail = email && isValidEmail(email);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const validPhone = data.phone && isValidPhoneNumber(data.phone);
+    const validEmail = data.email && isValidEmail(data.email);
 
     if (!validPhone && !validEmail) {
       setOverallError(OVERALL_DATA_ERROR);
       return;
     }
-    if (!message) {
+    if (!data.clientMessage) {
       setOverallError(OVERALL_DATA_ERROR);
       return;
     }
@@ -65,9 +56,9 @@ export default function Contact() {
     const response = await fetch(SUBMIT_ENDPOINT, {
       method: "POST",
       body: JSON.stringify({
-        email,
-        telephone,
-        message,
+        email: data.email,
+        telephone: data.phone,
+        message: data.clientMessage,
       }),
     }).catch((e) => {
       setToastMessage(FAILURE_MESSAGE);
@@ -79,9 +70,9 @@ export default function Contact() {
       return;
     }
 
-    const data = await response.json();
+    const responseData = await response.json();
 
-    if (data.success) {
+    if (responseData.success) {
       setToastMessage(SUCESS_MESSAGE);
     } else {
       setToastMessage(FAILURE_MESSAGE);
@@ -90,31 +81,52 @@ export default function Contact() {
 
   return (
     <>
-      <form id="contactForm" noValidate onSubmit={onSubmit}>
+      <form className={styles.contactForm} onSubmit={handleSubmit(onSubmit)}>
         <input
-          name="email"
           className="optional-group"
-          placeholder="Email address"
-          onChange={handleEmailChange}
+          placeholder="Email"
+          defaultValue=""
+          {...register("email", {
+            pattern: {
+              value: /\S+@\S+\.\S+/,
+              message: "Entered value does not match email format",
+            },
+          })}
         />
-        {emailError && <p>{emailError}</p>}
-        <Input
-          country={"US"}
-          international={false}
-          placeholder="Enter phone number"
-          value={telephone}
-          onChange={setTelephone}
-          onBlur={handlePhoneBlur}
-          maxLength={16}
+        {errors.email && (
+          <p className={styles.error}>{`${errors.email.message}`}</p>
+        )}
+
+        <Controller
+          name="phone"
+          control={control}
+          rules={{
+            validate: (value) => value && isValidPhoneNumber(value),
+          }}
+          render={({ field: { onChange, value } }) => (
+            <PhoneInput
+              value={value}
+              onChange={onChange}
+              country="US"
+              id="phone"
+              placeholder="Phone"
+            />
+          )}
         />
-        {phoneError && <p>{phoneError}</p>}
-        <textarea
-          name="message"
+        {errors["phone"] && <p className={styles.error}>Invalid Phone</p>}
+
+        <input
           placeholder="Message"
-          onChange={(e) => setMessage(e.target.value)}
+          defaultValue=""
+          {...register("clientMessage", { required: true })}
         />
-        <button type="submit">SEND</button>
-        {overallError && <p>{overallError}</p>}
+
+        <input
+          type="submit"
+          className={`${styles["submit-button"]} ${isValid && styles.valid}`}
+        />
+
+        {overallError && <p className={styles.error}>{overallError}</p>}
       </form>
       <Toast message={toastMessage} handleButtonClick={closeToast} />
     </>
