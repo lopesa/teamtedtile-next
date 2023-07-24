@@ -3,6 +3,7 @@ import BusinessCard from "components/BusinessCard";
 import { Metadata } from "next";
 import { getGalleryImages } from "utils/APIUtils";
 import HomeSplash from "@components/homeSplash";
+import Menu from "@components/menu";
 
 export const metadata: Metadata = {
   title: "Team Ted Tile -- Home ",
@@ -15,6 +16,7 @@ export default async function Home() {
   return (
     <>
       <main>
+        <Menu position="fixed" showLogo={true} />
         <HomeSplash />
         <ScrollGallery images={images} notFound={notFound} />
         <BusinessCard />

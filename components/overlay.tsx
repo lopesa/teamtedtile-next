@@ -5,6 +5,7 @@ import styles from "styles/overlay.module.scss";
 import Menu from "./menu";
 import { useRouter } from "next/navigation";
 import KeyActions from "@components/KeyActions";
+import HomeSplash from "./homeSplash";
 
 export default function Overlay(props: PropsWithChildren) {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function Overlay(props: PropsWithChildren) {
           {props.children}
         </div>
       </div>
+      <HomeSplash />
     </>
   );
 }

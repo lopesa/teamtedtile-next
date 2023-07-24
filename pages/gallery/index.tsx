@@ -27,11 +27,7 @@ export default function HomeGallery({ images, notFound }: HomeGalleryProps) {
     <>
       <PageHead metaContent="Gallery" />
 
-      <Menu
-        triggerElementRef={menuTriggerRef}
-        position="fixed"
-        showLogo={true}
-      />
+      <Menu position="fixed" showLogo={true} />
       <div ref={menuTriggerRef} style={{ position: "fixed", top: "40vh" }} />
       <main>
         <HomeSplash />

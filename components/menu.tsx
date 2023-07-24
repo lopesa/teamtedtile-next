@@ -1,6 +1,6 @@
 "use client";
 
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useRef, useState } from "react";
 import styles from "styles/menu.module.scss";
 import ActiveLink from "./activeLink";
 import PageScrollSpy from "./PageScrollSpy";
@@ -12,16 +12,15 @@ type MenuProps = {
   backgroundColor?: string;
   position?: "fixed" | "sticky";
   showLogo?: boolean;
-  triggerElementRef?: React.RefObject<HTMLElement>;
 };
 
 export default function Menu({
   backgroundColor,
   position,
   showLogo,
-  triggerElementRef,
 }: PropsWithChildren<MenuProps>) {
   const [menuScrolledPast, setMenuScrolledPast] = useState(false);
+  const menuTriggerRef = useRef<HTMLDivElement>(null);
   return (
     <>
       <nav
@@ -80,9 +79,10 @@ export default function Menu({
           </a>
         </div> */}
       </nav>
-      {triggerElementRef && (
+      <div ref={menuTriggerRef} style={{ position: "fixed", top: "40vh" }} />
+      {menuTriggerRef && (
         <PageScrollSpy
-          triggerElementRef={triggerElementRef}
+          triggerElementRef={menuTriggerRef}
           scrollEvent={(closeToBottom) => {
             if (closeToBottom) {
               setMenuScrolledPast(true);

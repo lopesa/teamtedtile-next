@@ -1,16 +1,16 @@
-"use client";
-
-import { useRef } from "react";
 import "../styles/globals.scss";
-import Menu from "components/menu";
 import Script from "next/script";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://teamtedtile.com"),
+};
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const menuTriggerRef = useRef<HTMLDivElement>(null);
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   return (
     <html lang="en">
@@ -30,15 +30,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body>
-        <Menu
-          triggerElementRef={menuTriggerRef}
-          position="fixed"
-          showLogo={true}
-        />
-        <div ref={menuTriggerRef} style={{ position: "fixed", top: "40vh" }} />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
