@@ -6,6 +6,7 @@ import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input/input";
 import Toast from "components/Toast";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import styles from "styles/Contact.module.scss";
+import Script from "next/script";
 
 type Inputs = {
   email: string;
@@ -17,6 +18,7 @@ export default function Contact() {
   const [overallError, setOverallError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string>("");
   const SUBMIT_ENDPOINT = "send-mail";
+  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   const {
     register,
@@ -59,6 +61,8 @@ export default function Contact() {
         email: data.email,
         telephone: data.phone,
         message: data.clientMessage,
+        // @ts-ignore
+        clientID: gaGlobal?.vid ?? "",
       }),
     }).catch((e) => {
       setToastMessage(FAILURE_MESSAGE);
@@ -92,6 +96,7 @@ export default function Contact() {
               message: "Entered value does not match email format",
             },
           })}
+          data-cy="email-input"
         />
         {errors.email && (
           <p className={styles.error}>{`${errors.email.message}`}</p>
@@ -110,6 +115,7 @@ export default function Contact() {
               country="US"
               id="phone"
               placeholder="Phone"
+              data-cy="phone-input"
             />
           )}
         />
@@ -119,11 +125,13 @@ export default function Contact() {
           placeholder="Message"
           defaultValue=""
           {...register("clientMessage", { required: true })}
+          data-cy="message-input"
         />
 
         <input
           type="submit"
           className={`${styles["submit-button"]} ${isValid && styles.valid}`}
+          data-cy="submit-button"
         />
 
         {overallError && <p className={styles.error}>{overallError}</p>}
