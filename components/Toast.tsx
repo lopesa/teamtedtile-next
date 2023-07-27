@@ -7,7 +7,10 @@ export default function Toast({ message, handleButtonClick }: Props) {
   return (
     <div className={`${styles.toastHolder} ${message ? styles.active : ""}`}>
       <div className={styles.toast}>
-        <p dangerouslySetInnerHTML={{ __html: message }}></p>
+        <p
+          dangerouslySetInnerHTML={{ __html: message }}
+          data-cy="toast-message"
+        ></p>
         <div className={styles.buttonRow}>
           <div className={styles.button} onClick={handleButtonClick}>
             &times;

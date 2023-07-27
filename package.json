@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cypress": "cypress open",
+    "e2e:headless": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e\""
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
@@ -32,6 +34,8 @@
     "@types/node": "18.11.10",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.9",
-    "sass": "^1.56.1"
+    "cypress": "^12.17.2",
+    "sass": "^1.56.1",
+    "start-server-and-test": "^2.0.0"
   }
 }

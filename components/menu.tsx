@@ -28,11 +28,12 @@ export default function Menu({
           menuScrolledPast ? styles.scrolled : ""
         }`}
         style={{ backgroundColor: backgroundColor, position: position }}
+        data-cy="menu-container"
       >
         <ul>
           {showLogo && (
             <Link href="/">
-              <li className={styles.logoContainer}>
+              <li className={styles.logoContainer} data-cy="logo">
                 <Image
                   src={TTT_Logo}
                   alt="Team Ted Tile Logo"
