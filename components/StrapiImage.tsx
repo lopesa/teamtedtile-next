@@ -39,7 +39,6 @@ const sizedImageLoader = ({ src, width }: StrapiProps) => {
     width
   )}${src.substring(index)}`;
   return url;
-  // DEAFAULT === return `https://example.com/${src}?w=${width}&q=${quality || 75}`;
 };
 
 const backupLoader = (props: StrapiProps | undefined) => {
