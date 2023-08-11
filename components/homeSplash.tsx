@@ -8,7 +8,7 @@ function HomeSplash() {
         <div className={styles.one}>
           <h1>Team Ted Tile</h1>
           <div className={styles.container}>
-            <Link href="/gallery">
+            <Link href="/gallery" prefetch={false}>
               <div className={styles.downArrow}></div>
             </Link>
             <h4>Professional Tile Installer</h4>

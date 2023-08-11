@@ -47,7 +47,7 @@ export default function Menu({
             <ActiveLink
               activeClassName={styles.active}
               className={styles.category}
-              doNotPrefetch={true}
+              prefetch={false}
               href="/gallery"
             >
               Gallery

@@ -14,14 +14,14 @@ import React, { PropsWithChildren, useState, useEffect } from "react";
 type ActiveLinkProps = LinkProps & {
   className?: string;
   activeClassName: string;
-  doNotPrefetch?: boolean;
+  prefetch?: boolean;
 };
 
 const ActiveLink = ({
   children,
   activeClassName,
   className,
-  doNotPrefetch = false,
+  prefetch = true,
   ...props
 }: PropsWithChildren<ActiveLinkProps>) => {
   // const { asPath, isReady } = useRouter();
@@ -62,7 +62,7 @@ const ActiveLink = ({
   ]);
 
   return (
-    <Link className={computedClassName} {...props}>
+    <Link className={computedClassName} prefetch={prefetch} {...props}>
       {children}
     </Link>
   );
