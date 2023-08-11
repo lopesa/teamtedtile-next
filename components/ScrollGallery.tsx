@@ -142,6 +142,12 @@ const ScrollGallery = ({
                 // I think it has to be on the server so
                 // @TODO refactor compomponent to get it onto
                 // the server
+                // on further reflection, I think this may
+                // have to do with the usage of v 12 and 13 routers.
+                // NOTE: prefetching in the menu of "about" and "contact"
+                // both work but prefetching "gallery" there fails as well
+                // see how this looks after getting rid of v12 router before
+                // spending time.
                 prefetch={false}
               >
                 <ScrollGalleryImage image={images[index]} />
