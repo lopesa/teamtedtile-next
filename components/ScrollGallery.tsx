@@ -138,6 +138,11 @@ const ScrollGallery = ({
                   height: `${box.height}px`,
                   position: "absolute",
                 }}
+                // remove prefetch for now, it fails consistently
+                // I think it has to be on the server so
+                // @TODO refactor compomponent to get it onto
+                // the server
+                prefetch={false}
               >
                 <ScrollGalleryImage image={images[index]} />
               </Link>
