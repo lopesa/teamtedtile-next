@@ -10,6 +10,7 @@ function BusinessCard() {
             src={TTT_Logo}
             alt="Team Ted Tile Logo"
             fill={true}
+            objectFit="contain"
             sizes="150px"
           />
         </div>
