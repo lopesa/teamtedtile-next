@@ -4,7 +4,7 @@ import { PropsWithChildren, useRef, useState } from "react";
 import styles from "styles/menu.module.scss";
 import ActiveLink from "./activeLink";
 import PageScrollSpy from "./PageScrollSpy";
-import TTT_Logo from "public/images/ttt_logo.png";
+import TTT_Logo from "public/images/ttt_logo_menu.png";
 import Image from "next/image";
 import Link from "next/link";
 
