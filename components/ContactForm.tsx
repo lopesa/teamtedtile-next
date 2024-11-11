@@ -62,7 +62,7 @@ export default function Contact() {
         telephone: data.phone,
         message: data.clientMessage,
         // @ts-ignore
-        clientID: gaGlobal?.vid ?? "",
+        // clientID: gaGlobal?.vid ?? "",
       }),
     }).catch((e) => {
       setToastMessage(FAILURE_MESSAGE);
