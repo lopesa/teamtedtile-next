@@ -11,7 +11,7 @@
     "e2e:headless": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e\""
   },
   "dependencies": {
-    "@sendgrid/mail": "^7.7.0",
+    "@getbrevo/brevo": "^3.0.1",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
     "form-data": "^4.0.0",

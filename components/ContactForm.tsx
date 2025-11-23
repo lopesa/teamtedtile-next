@@ -6,19 +6,17 @@ import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input/input";
 import Toast from "components/Toast";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import styles from "styles/Contact.module.scss";
-import Script from "next/script";
+import { sendMail } from "lib/srv/Mail";
 
 type Inputs = {
-  email: string;
-  phone: string;
+  email?: string;
+  phone?: string;
   clientMessage: string;
 };
 
 export default function Contact() {
   const [overallError, setOverallError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string>("");
-  const SUBMIT_ENDPOINT = "send-mail";
-  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   const {
     register,
@@ -54,33 +52,19 @@ export default function Contact() {
       setOverallError(OVERALL_DATA_ERROR);
       return;
     }
-
-    const response = await fetch(SUBMIT_ENDPOINT, {
-      method: "POST",
-      body: JSON.stringify({
-        email: data.email,
-        telephone: data.phone,
-        message: data.clientMessage,
-        // @ts-ignore
-        // clientID: gaGlobal?.vid ?? "",
-      }),
-    }).catch((e) => {
-      setToastMessage(FAILURE_MESSAGE);
-      return null;
-    });
-
-    if (!response?.ok) {
+    const mailSendResponse = await sendMail({
+      email: data.email,
+      telephone: data.phone,
+      messageText: data.clientMessage,
+      // @ts-ignore
+      clientID: gaGlobal?.vid ?? "",
+    })
+    
+    if (!mailSendResponse.status) {
       setToastMessage(FAILURE_MESSAGE);
       return;
     }
-
-    const responseData = await response.json();
-
-    if (responseData.success) {
-      setToastMessage(SUCESS_MESSAGE);
-    } else {
-      setToastMessage(FAILURE_MESSAGE);
-    }
+    setToastMessage(SUCESS_MESSAGE);
   };
 
   return (
